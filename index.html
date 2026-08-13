@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Ficha 360° — Emprender para crecer y fortalecer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --prim:#A78BFA; --prim-osc:#C4B5FD; --prim2:#8B5CF6; --acento:#F472B6;
+  --lila:rgba(139,92,246,.16); --lila2:rgba(139,92,246,.34);
+  --verde:#34D399; --verde-bg:rgba(52,211,153,.15);
+  --amarillo:#FBBF24; --amarillo-bg:rgba(251,191,36,.15);
+  --rojo:#F87171; --rojo-bg:rgba(248,113,113,.15);
+  --grisc:#9CA3AF; --grisc-bg:rgba(156,163,175,.15);
+  --tinta:#F4F1FF; --gris:#B4A9D6; --borde:rgba(255,255,255,.12); --fondo:#0E0620;
+  --vidrio:rgba(255,255,255,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Plus Jakarta Sans','Segoe UI',system-ui,sans-serif;color:var(--tinta);min-height:100vh;
+  background:#0E0620;
+  background-image:linear-gradient(165deg,#160A33 0%,#1E0B45 40%,#2A0E56 75%,#3B1170 100%);
+  background-attachment:fixed}
+.orbes{position:fixed;inset:0;overflow:hidden;z-index:0;pointer-events:none}
+.orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;animation:deriva 18s ease-in-out infinite alternate}
+.orb.o1{width:360px;height:360px;background:radial-gradient(circle,#7C3AED,transparent 70%);top:-90px;left:-110px}
+.orb.o2{width:320px;height:320px;background:radial-gradient(circle,#DB2777,transparent 70%);bottom:-70px;right:-90px;animation-duration:23s;animation-delay:-6s}
+.orb.o3{width:280px;height:280px;background:radial-gradient(circle,#2563EB,transparent 70%);top:38%;left:58%;opacity:.3;animation-duration:27s;animation-delay:-11s}
+@keyframes deriva{0%{transform:translate(0,0) scale(1)}50%{transform:translate(40px,-30px) scale(1.12)}100%{transform:translate(-30px,35px) scale(.94)}}
+.chispa{position:absolute;color:rgba(255,255,255,.5);animation:parpadeo 6s ease-in-out infinite;text-shadow:0 0 8px rgba(196,181,253,.8)}
+.chispa.c1{top:16%;left:12%;font-size:13px}
+.chispa.c2{top:32%;right:9%;font-size:17px;animation-delay:-1.6s}
+.chispa.c3{bottom:24%;left:16%;font-size:11px;animation-delay:-3.1s}
+.chispa.c4{bottom:11%;right:20%;font-size:15px;animation-delay:-4.2s}
+.chispa.c5{top:58%;left:6%;font-size:14px;animation-delay:-2.4s}
+@keyframes parpadeo{0%,100%{opacity:.12;transform:translateY(0) scale(.9)}50%{opacity:.8;transform:translateY(-14px) scale(1.15)}}
+#app{max-width:560px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;z-index:1}
+header{background:linear-gradient(120deg,rgba(59,7,100,.92),rgba(109,40,217,.88),rgba(162,28,175,.88),rgba(109,40,217,.88));
+  background-size:300% 300%;animation:grad 12s ease infinite;color:#fff;padding:14px 18px;display:flex;align-items:center;gap:12px;
+  position:sticky;top:0;z-index:10;backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.10);
+  box-shadow:0 6px 26px rgba(0,0,0,.45)}
+@keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+header .logo{font-size:23px;filter:drop-shadow(0 0 8px rgba(244,114,182,.7));animation:flota 3.5s ease-in-out infinite}
+@keyframes flota{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+header .t1{font-size:15.5px;font-weight:800;letter-spacing:.2px;line-height:1.15}
+header .t2{font-size:10.5px;opacity:.8;font-weight:500}
+header .gear{margin-left:auto;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);color:#fff;
+  font-size:16px;border-radius:12px;padding:7px 10px;cursor:pointer;transition:.2s}
+header .gear:hover{background:rgba(255,255,255,.24);transform:rotate(30deg)}
+#barra{height:7px;background:rgba(255,255,255,.09);position:relative;overflow:hidden}
+#barra-fill{height:100%;width:0;background:linear-gradient(90deg,#8B5CF6,#F472B6);transition:width .45s cubic-bezier(.4,0,.2,1);
+  position:relative;border-radius:0 6px 6px 0;box-shadow:0 0 12px rgba(244,114,182,.6)}
+#barra-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);
+  animation:brillo 1.8s linear infinite}
+@keyframes brillo{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+main{flex:1;padding:22px 18px 122px}
+.pantalla{animation:ap .34s cubic-bezier(.22,1,.36,1)}
+@keyframes ap{from{opacity:0;transform:translateY(15px) scale(.99)}to{opacity:1;transform:none}}
+.paso-num{display:inline-block;font-size:11px;color:var(--prim-osc);font-weight:800;letter-spacing:.8px;text-transform:uppercase;
+  background:var(--lila);border:1px solid rgba(167,139,250,.35);border-radius:99px;padding:5px 13px;margin-bottom:12px}
+h2{font-size:21px;line-height:1.3;margin-bottom:8px;font-weight:800;letter-spacing:-.2px;color:#fff}
+h3{font-size:15px;font-weight:800;color:#fff;margin:18px 0 8px}
+.ayuda{font-size:13.5px;color:var(--gris);margin-bottom:16px;line-height:1.55}
+.nota{background:rgba(255,255,255,.05);border:1px solid var(--borde);border-left:4px solid var(--prim2);
+  border-radius:12px;padding:13px 15px;font-size:13px;line-height:1.6;color:#E4DEF7;margin-bottom:16px}
+.nota b{color:var(--prim-osc)}
+.opt{display:block;width:100%;text-align:left;background:var(--vidrio);border:1.5px solid var(--borde);border-radius:16px;
+  padding:15px 16px;margin-bottom:11px;font-size:14.5px;cursor:pointer;transition:all .18s;font-family:inherit;
+  color:var(--tinta);backdrop-filter:blur(12px);box-shadow:0 4px 16px rgba(0,0,0,.25);position:relative}
+.opt:hover{border-color:rgba(167,139,250,.6);transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,0,0,.35)}
+.opt:active{transform:scale(.985)}
+.opt.sel{border-color:#A78BFA;background:linear-gradient(135deg,rgba(139,92,246,.30),rgba(236,72,153,.18));
+  box-shadow:0 0 0 1px rgba(167,139,250,.4),0 10px 30px rgba(139,92,246,.35)}
+.opt.sel::after{content:'✓';position:absolute;top:11px;right:13px;width:23px;height:23px;border-radius:50%;
+  background:linear-gradient(135deg,#8B5CF6,#F472B6);color:#fff;font-size:12.5px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;animation:pop .25s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 0 12px rgba(244,114,182,.7)}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+.opt .tit{font-weight:700;display:block;padding-right:26px;color:#fff}
+.opt .desc{font-size:12.5px;color:var(--gris);display:block;margin-top:3px;line-height:1.45}
+.opt .nivel{display:inline-block;font-size:10.5px;font-weight:800;padding:4px 11px;border-radius:99px;margin-bottom:7px;letter-spacing:.3px}
+.opt .nivel.n1{background:var(--rojo-bg);color:var(--rojo)}
+.opt .nivel.n2{background:var(--amarillo-bg);color:var(--amarillo)}
+.opt .nivel.n3{background:var(--verde-bg);color:var(--verde)}
+.nsnrna{display:flex;gap:8px;margin:2px 0 10px}
+.mini-opt{flex:1;background:rgba(255,255,255,.04);border:1.5px solid var(--borde);border-radius:12px;padding:11px 6px;
+  font-size:12.5px;font-weight:700;color:var(--gris);cursor:pointer;font-family:inherit;transition:.16s;text-align:center}
+.mini-opt:hover{border-color:rgba(167,139,250,.5)}
+.mini-opt.sel{border-color:var(--grisc);background:var(--grisc-bg);color:#E5E7EB}
+input[type=text],input[type=number],textarea,select{width:100%;border:1.5px solid var(--borde);border-radius:14px;
+  padding:13px 14px;font-size:16px;font-family:inherit;background:rgba(255,255,255,.07);color:#fff;transition:border .2s;backdrop-filter:blur(10px)}
+select{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23B4A9D6' stroke-width='3'><path d='M6 9l6 6 6-6'/></svg>");background-repeat:no-repeat;background-position:right 14px center}
+select option{background:#241147;color:#fff}
+input::placeholder,textarea::placeholder{color:rgba(255,255,255,.32)}
+textarea{min-height:84px;resize:vertical;font-size:15px}
+input:focus,textarea:focus,select:focus{outline:none;border-color:#A78BFA;box-shadow:0 0 0 4px rgba(139,92,246,.2)}
+.campo{margin-bottom:15px}
+.campo label{display:block;font-size:13px;font-weight:700;margin-bottom:6px;color:#E4DEF7;line-height:1.4}
+.campo .cod{display:inline-block;font-size:10.5px;font-weight:800;color:var(--prim-osc);background:var(--lila);
+  border-radius:6px;padding:2px 7px;margin-right:6px}
+.campo .hint{font-size:11.5px;color:var(--gris);margin-top:5px;line-height:1.4}
+.dual{display:flex;gap:10px}
+.dual>div{flex:1}
+.dual .sub{font-size:11px;color:var(--gris);margin-bottom:4px;display:block}
+.evid{margin-top:12px}
+.evid label{font-size:12px;font-weight:700;color:var(--prim-osc);display:block;margin-bottom:5px}
+.evid input{font-size:14px;padding:11px 13px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(14,6,32,.85);backdrop-filter:blur(14px);
+  border-top:1px solid rgba(255,255,255,.09);padding:11px 18px calc(11px + env(safe-area-inset-bottom));z-index:9}
+.nav-in{max-width:560px;margin:0 auto;display:flex;gap:10px}
+.btn{flex:1;border:none;border-radius:15px;padding:15px;font-size:15.5px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .2s;letter-spacing:.2px}
+.btn-p{background:linear-gradient(135deg,#8B5CF6,#EC4899);color:#fff;box-shadow:0 6px 22px rgba(236,72,153,.45)}
+.btn-p:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 30px rgba(236,72,153,.55)}
+.btn-p:disabled{background:rgba(255,255,255,.13);box-shadow:none;cursor:not-allowed;color:rgba(255,255,255,.45)}
+.btn-s{background:rgba(255,255,255,.06);color:var(--prim-osc);border:1.5px solid rgba(167,139,250,.45);flex:0 0 auto;padding:15px 18px;backdrop-filter:blur(10px)}
+.btn-s:hover{border-color:#A78BFA;background:rgba(139,92,246,.15)}
+.btn-g{background:linear-gradient(135deg,#059669,#10B981);color:#fff;box-shadow:0 6px 22px rgba(16,185,129,.4)}
+.btn-r{background:linear-gradient(135deg,#DC2626,#EF4444);color:#fff;box-shadow:0 6px 22px rgba(239,68,68,.4)}
+.tarjeta{background:var(--vidrio);border:1px solid var(--borde);border-radius:20px;padding:18px;margin-bottom:15px;
+  backdrop-filter:blur(12px);box-shadow:0 12px 34px rgba(0,0,0,.35)}
+.centrado{text-align:center}
+.big-emoji{font-size:54px;text-align:center;margin:10px 0;animation:flota 3s ease-in-out infinite;filter:drop-shadow(0 0 14px rgba(244,114,182,.5))}
+.codigo-tag{display:inline-block;background:linear-gradient(135deg,var(--lila),var(--lila2));color:var(--prim-osc);
+  border:1px solid rgba(167,139,250,.4);font-weight:800;border-radius:9px;padding:4px 11px;font-size:12px;letter-spacing:.4px}
+.alerta{background:rgba(251,191,36,.13);border:1px solid rgba(251,191,36,.3);color:#FDE68A;border-radius:13px;padding:12px 14px;font-size:13px;margin:12px 0;line-height:1.55}
+.ok-envio{background:rgba(52,211,153,.14);border:1px solid rgba(52,211,153,.35);border-radius:13px;padding:14px;font-size:13.5px;margin:12px 0;text-align:center;font-weight:700;color:#6EE7B7}
+.err-envio{background:rgba(248,113,113,.13);border:1px solid rgba(248,113,113,.35);border-radius:13px;padding:14px;font-size:13.5px;margin:12px 0;text-align:center;color:#FCA5A5}
+.mini{font-size:11.5px;color:rgba(255,255,255,.42);margin-top:16px;text-align:center;line-height:1.6}
+.fase-btn{display:flex;align-items:center;gap:15px}
+.fase-btn .ic{font-size:30px}
+.fase-btn .tx b{display:block;font-size:15.5px;margin-bottom:2px;color:#fff}
+.fase-btn .tx span{font-size:12.5px;color:var(--gris)}
+.spinner{display:inline-block;width:17px;height:17px;border:3px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle}
+@keyframes sp{to{transform:rotate(360deg)}}
+label.lbl{display:block;font-size:12.5px;font-weight:800;margin:14px 0 7px;color:var(--prim-osc)}
+/* filas Sí/No y estados */
+.fila-sn{background:var(--vidrio);border:1px solid var(--borde);border-radius:14px;padding:13px 14px;margin-bottom:11px}
+.fila-sn .txt{font-size:13.5px;font-weight:600;color:#fff;margin-bottom:9px;line-height:1.4}
+.pills{display:flex;gap:7px;flex-wrap:wrap}
+.pill{border:1.5px solid var(--borde);background:rgba(255,255,255,.04);border-radius:99px;padding:8px 15px;
+  font-size:12.5px;font-weight:700;color:var(--gris);cursor:pointer;font-family:inherit;transition:.16s}
+.pill:hover{border-color:rgba(167,139,250,.5)}
+.pill.sel{border-color:#A78BFA;background:linear-gradient(135deg,rgba(139,92,246,.35),rgba(236,72,153,.2));color:#fff}
+.pill.sel.si-alerta{border-color:var(--rojo);background:var(--rojo-bg);color:#FCA5A5}
+.pill.sel.ok{border-color:var(--verde);background:var(--verde-bg);color:#6EE7B7}
+.escala5{display:flex;gap:6px;margin-top:8px}
+.escala5 .pill{flex:1;text-align:center;padding:10px 0}
+/* priorización */
+.prio-card{background:var(--vidrio);border:1px solid var(--borde);border-radius:16px;padding:15px;margin-bottom:14px}
+.prio-card .num{font-size:11px;font-weight:800;color:var(--prim-osc);letter-spacing:.7px;text-transform:uppercase;margin-bottom:8px}
+.crit-fila{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.crit-fila .cn{flex:1;font-size:12.5px;color:#E4DEF7;font-weight:600}
+.crit-fila .cp{display:flex;gap:5px}
+.crit-fila .cp button{width:34px;height:34px;border-radius:10px;border:1.5px solid var(--borde);background:rgba(255,255,255,.04);
+  color:var(--gris);font-weight:800;font-size:13px;cursor:pointer;font-family:inherit;transition:.15s}
+.crit-fila .cp button.sel{border-color:#A78BFA;background:linear-gradient(135deg,#8B5CF6,#EC4899);color:#fff}
+.total-prio{text-align:right;font-size:13px;font-weight:800;color:var(--prim-osc);margin-top:6px}
+/* resultados */
+.anillo-wrap{display:flex;justify-content:center;margin:6px 0 2px}
+.anillo{position:relative;width:150px;height:150px;filter:drop-shadow(0 0 18px rgba(139,92,246,.45))}
+.anillo svg{transform:rotate(-90deg)}
+.anillo .num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.anillo .num b{font-size:31px;letter-spacing:-1px;color:#fff}
+.anillo .num span{font-size:10.5px;color:var(--gris);font-weight:700;text-transform:uppercase;letter-spacing:.6px}
+.sem-card{background:var(--vidrio);border:1px solid var(--borde);border-radius:18px;padding:16px;margin-bottom:13px;
+  backdrop-filter:blur(12px);box-shadow:0 10px 28px rgba(0,0,0,.32);
+  border-left:6px solid var(--borde);opacity:0;animation:sube .55s cubic-bezier(.22,1,.36,1) forwards}
+@keyframes sube{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.sem-card.ROJO{border-left-color:#F87171}
+.sem-card.AMARILLO{border-left-color:#FBBF24}
+.sem-card.VERDE{border-left-color:#34D399}
+.sem-card.GRIS{border-left-color:#9CA3AF}
+.sem-top{display:flex;align-items:center;gap:12px}
+.sem-luz{width:48px;height:48px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.sem-luz.ROJO{background:var(--rojo-bg);border:1px solid rgba(248,113,113,.35)}
+.sem-luz.AMARILLO{background:var(--amarillo-bg);border:1px solid rgba(251,191,36,.35)}
+.sem-luz.VERDE{background:var(--verde-bg);border:1px solid rgba(52,211,153,.4);animation:glow 2.2s ease-in-out infinite}
+.sem-luz.GRIS{background:var(--grisc-bg);border:1px solid rgba(156,163,175,.35)}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(52,211,153,0)}50%{box-shadow:0 0 0 8px rgba(52,211,153,.14)}}
+.sem-nombre{font-weight:800;font-size:15px;color:#fff;line-height:1.25}
+.sem-estado{font-size:12px;font-weight:800;margin-top:2px}
+.sem-estado.ROJO{color:var(--rojo)}
+.sem-estado.AMARILLO{color:var(--amarillo)}
+.sem-estado.VERDE{color:var(--verde)}
+.sem-estado.GRIS{color:var(--grisc)}
+.sem-flecha{font-size:12px;color:var(--gris);font-weight:600;margin-top:3px}
+.dots{display:flex;flex-wrap:wrap;gap:5px;margin:11px 0 2px}
+.dot{font-size:10.5px;font-weight:700;border-radius:99px;padding:4px 9px;line-height:1.2}
+.dot.v1{background:var(--rojo-bg);color:var(--rojo)}
+.dot.v2{background:var(--amarillo-bg);color:var(--amarillo)}
+.dot.v3{background:var(--verde-bg);color:var(--verde)}
+.dot.v0{background:var(--grisc-bg);color:var(--grisc)}
+.panorama{font-size:13px;line-height:1.6;margin-top:10px;color:#E4DEF7}
+.panorama b{color:var(--prim-osc)}
+.acciones{margin-top:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:13px;padding:12px 13px}
+.acciones .a-tit{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--prim);margin-bottom:7px}
+.reco{display:flex;gap:9px;font-size:13px;line-height:1.5;margin-bottom:7px;color:#E4DEF7}
+.reco:last-child{margin-bottom:0}
+.reco span:first-child{flex-shrink:0}
+.alertas-box{background:linear-gradient(135deg,rgba(220,38,38,.22),rgba(139,92,246,.15));border:1px solid rgba(248,113,113,.4);
+  border-radius:18px;padding:16px;margin-bottom:15px}
+.alertas-box h3{margin:0 0 9px;font-size:14.5px}
+.alertas-box .it{display:flex;gap:9px;font-size:13px;line-height:1.5;margin-bottom:7px;color:#FEE2E2;font-weight:600}
+.logros{background:linear-gradient(135deg,rgba(236,72,153,.20),rgba(139,92,246,.20));border:1px solid rgba(244,114,182,.3);
+  border-radius:18px;padding:17px;margin-bottom:15px;backdrop-filter:blur(12px)}
+.logros h3{font-size:14.5px;margin:0 0 10px;color:#fff}
+.logro{display:flex;gap:10px;font-size:13.5px;line-height:1.5;margin-bottom:8px;font-weight:600;color:#F4F1FF}
+.msj-final{font-size:16px;font-weight:800;text-align:center;margin:14px 0 6px;line-height:1.45;color:#fff}
+.resumen-tabla{width:100%;font-size:12.5px;border-collapse:collapse;margin-top:8px}
+.resumen-tabla th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--gris);padding:6px 4px;border-bottom:1px solid var(--borde)}
+.resumen-tabla td{padding:8px 4px;border-bottom:1px solid rgba(255,255,255,.06);color:#E4DEF7}
+.resumen-tabla .c{text-align:center;font-weight:800}
+
+/* ---------- ayuda contextual ---------- */
+.fab-ayuda{position:fixed;right:16px;bottom:86px;z-index:20;width:50px;height:50px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.25);background:linear-gradient(135deg,#8B5CF6,#EC4899);color:#fff;
+  font-size:21px;font-weight:800;cursor:pointer;box-shadow:0 8px 24px rgba(236,72,153,.5);font-family:inherit;
+  display:flex;align-items:center;justify-content:center;animation:latido 3.4s ease-in-out infinite}
+@keyframes latido{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+.fab-ayuda:active{transform:scale(.93)}
+.modal-fondo{position:fixed;inset:0;background:rgba(8,3,20,.78);backdrop-filter:blur(6px);z-index:30;
+  display:flex;align-items:flex-end;justify-content:center;animation:aparece .22s ease}
+@keyframes aparece{from{opacity:0}to{opacity:1}}
+.modal{background:linear-gradient(180deg,#2A1552,#1A0B36);border:1px solid rgba(167,139,250,.35);
+  border-radius:24px 24px 0 0;width:100%;max-width:560px;max-height:86vh;overflow-y:auto;
+  padding:22px 20px calc(26px + env(safe-area-inset-bottom));animation:sube-modal .3s cubic-bezier(.22,1,.36,1);
+  box-shadow:0 -12px 40px rgba(0,0,0,.5)}
+@keyframes sube-modal{from{transform:translateY(60px);opacity:.4}to{transform:none;opacity:1}}
+.modal .asa{width:44px;height:5px;border-radius:99px;background:rgba(255,255,255,.25);margin:0 auto 16px}
+.modal h3{margin:0 0 6px;font-size:18px}
+.modal .sub{font-size:12.5px;color:var(--gris);margin-bottom:14px}
+.modal .bloque{background:rgba(255,255,255,.05);border:1px solid var(--borde);border-radius:14px;padding:13px 15px;margin-bottom:11px}
+.modal .bloque .bt{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--prim);margin-bottom:6px}
+.modal .bloque p{font-size:13.5px;line-height:1.6;color:#E4DEF7;margin:0}
+.modal .bloque ul{margin:0;padding-left:17px}
+.modal .bloque li{font-size:13.5px;line-height:1.6;color:#E4DEF7;margin-bottom:5px}
+.modal .ejemplo{background:rgba(52,211,153,.10);border-color:rgba(52,211,153,.3)}
+.modal .ejemplo .bt{color:var(--verde)}
+.modal .ejemplo p{font-style:italic}
+.buscador{position:relative;margin-bottom:14px}
+.buscador input{padding-left:42px}
+.buscador::before{content:'🔎';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:15px;opacity:.7}
+.contador{font-size:11.5px;color:var(--gris);margin:-6px 0 12px;text-align:right}
+@supports not (backdrop-filter:blur(10px)){
+  .opt,.tarjeta,.sem-card,.logros,.btn-s,.nav,.fila-sn,.prio-card{background:#221244}
+  .modal{background:#1A0B36}
+  input[type=text],input[type=number],textarea,select{background:#221244}
+}
+@media (prefers-reduced-motion:reduce){
+  .orb,.chispa,header,.big-emoji,header .logo,#barra-fill::after,.sem-luz.VERDE,.fab-ayuda{animation:none}
+  .sem-card{opacity:1;animation:none}
+}
+@media (max-width:380px){
+  main{padding:18px 13px 118px}
+  h2{font-size:19px}
+  .crit-fila .cp button{width:31px;height:31px}
+}
+</style>
+</head>
+<body>
+<div class="orbes">
+  <div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+  <span class="chispa c1">✦</span><span class="chispa c2">✧</span><span class="chispa c3">✦</span>
+  <span class="chispa c4">✧</span><span class="chispa c5">✦</span>
+</div>
+<div id="app">
+  <header>
+    <span class="logo">🧭</span>
+    <div><div class="t1">Ficha 360°</div><div class="t2">Emprender para crecer y fortalecer · IFFI–IPEE</div></div>
+    <button class="gear" onclick="irConfig()">⚙️</button>
+  </header>
+  <div id="barra"><div id="barra-fill"></div></div>
+  <main id="main"></main>
+  <button class="fab-ayuda" id="fab" onclick="abrirAyuda()" style="display:none" title="¿Cómo se llena?">?</button>
+  <div id="modal-ayuda"></div>
+  <div class="nav" id="nav" style="display:none">
+    <div class="nav-in">
+      <button class="btn btn-s" id="btn-atras" onclick="atras()">←</button>
+      <button class="btn btn-p" id="btn-sig" onclick="siguiente()">Siguiente</button>
+    </div>
+  </div>
+</div>
+<script>
+/* ==========================================================================
+   FICHA 360° — Aplicación de campo (ex ante y ex post)
+   Instrumentos aprobados 31/07/2026 con los ajustes de revisión:
+   · Ítem 1.1 sin "retiros" · Ítems 4.5 y 6.5 retirados (28 ítems)
+   · Redacción adaptada a emprendedoras (contexto Cochabamba, Bolivia)
+   ========================================================================== */
+
+const LSKEY_URL='f360_url', LSKEY_DRAFT='f360_draft3', LSKEY_COLA='f360_cola3', LSKEY_OPACO='f360_opaco';
+let MODO_OPACO=localStorage.getItem(LSKEY_OPACO)==='1';
+const API_URL_DEFECTO='https://script.google.com/macros/s/AKfycbwdwg12DmPtimfGHSa0CHKay7MhtOrzQnDYxpNYpaipH8-l3TJ8-33fxiaZ2lfeeLaq/exec';
+let API_URL=localStorage.getItem(LSKEY_URL)||API_URL_DEFECTO;
+const VERSION_INSTRUMENTO='1.1';
+
+const ROSTER_DEMO=[
+ {codigo:'ART-001',apellidos:'Mamani Flores',nombres:'Julia',emprendimiento:'Tejidos Arcoíris',municipio:'Quillacollo',rubro:'Artesanías'},
+ {codigo:'ALI-002',apellidos:'Quispe Rojas',nombres:'María',emprendimiento:'Delicias del Valle',municipio:'Cochabamba',rubro:'Alimentos'},
+ {codigo:'TEX-003',apellidos:'Condori Vargas',nombres:'Rosa',emprendimiento:'Confecciones Rosita',municipio:'Colcapirhua',rubro:'Textiles'}
+];
+let ROSTER=[], EXANTE_PREVIO={};
+
+/* ---------------- Semáforo: 6 dimensiones · 28 ítems ---------------- */
+const DIMS=[
+{id:'D1',n:1,nombre:'Manejo del dinero',oficial:'Económico-financiera',emoji:'💰',
+ resumen:'Cómo lleva sus cuentas, saca sus precios, organiza su dinero y responde ante un imprevisto.',
+ items:[
+ {id:'1.1',t:'Anota sus ventas y sus costos.',corto:'Cuentas',
+  n:['No anota nada, o mezcla el dinero del negocio con el de la casa.',
+     'Anota a veces o de forma incompleta.',
+     'Anota siempre, está al día y usa esa información para decidir.']},
+ {id:'1.2',t:'Saca sus precios tomando en cuenta sus costos y su trabajo.',corto:'Precios',
+  n:['Pone el precio copiando a otras personas, sin sacar cuentas.',
+     'Toma en cuenta solo algunos costos.',
+     'Toma en cuenta materiales, su tiempo, la ganancia que quiere y los precios del mercado.']},
+ {id:'1.3',t:'Organiza con anticipación su dinero, sus pagos y sus compras.',corto:'Organiza el dinero',
+  n:['Compra o paga recién cuando aparece la necesidad.',
+     'Se organiza a medias, solo para algunas cosas.',
+     'Sabe con anticipación cuánto entra, cuánto sale y qué tiene que pagar.']},
+ {id:'1.4',t:'Analiza bien antes de pedir un préstamo o hacer una compra grande.',corto:'Préstamos',
+  n:['No calcula si va a poder pagar.',
+     'Compara algunas opciones, pero sin sacar cuentas completas.',
+     'Calcula la ganancia, la cuota, el riesgo y si podrá seguir decidiendo con libertad.']},
+ {id:'1.5',t:'Tiene un ahorro o una salida para las emergencias.',corto:'Ahorro',
+  n:['No tiene ahorro ni a quién recurrir.',
+     'Tiene una ayuda limitada o prestada de conocidos.',
+     'Tiene un ahorro o una alternativa segura a la que puede acceder.']}]},
+{id:'D2',n:2,nombre:'Producción y calidad',oficial:'Productiva y de calidad',emoji:'⚙️',
+ resumen:'Cómo produce, cuida la calidad, cumple pedidos, evita pérdidas y mantiene sus equipos.',
+ items:[
+ {id:'2.1',t:'Tiene un orden de trabajo que puede repetir siempre igual.',corto:'Orden de trabajo',
+  n:['No tiene un orden definido; cada vez lo hace distinto.',
+     'Tiene un orden a medias.',
+     'Tiene claros los pasos, los tiempos y quién hace cada cosa.']},
+ {id:'2.2',t:'Controla la calidad y la seguridad de lo que produce.',corto:'Calidad',
+  n:['No tiene forma de controlar la calidad.',
+     'Controla algunas cosas, no siempre.',
+     'Aplica controles claros y puede mostrar cómo lo hace.']},
+ {id:'2.3',t:'Sabe cuánto puede producir y cumple con los pedidos.',corto:'Cumple pedidos',
+  n:['No sabe cuánto puede producir; se compromete sin calcular.',
+     'Lo calcula por encima, más o menos.',
+     'Se compromete según su tiempo, sus máquinas y sus materiales.']},
+ {id:'2.4',t:'Controla y va reduciendo lo que se echa a perder o hay que rehacer.',corto:'Pérdidas',
+  n:['No se fija ni cuenta lo que se pierde.',
+     'Sabe por qué pasa, pero no lo cuenta ni lo corrige.',
+     'Lo anota, lo previene y comprueba que va bajando.']},
+ {id:'2.5',t:'Cuida sus máquinas, sus materiales y su lugar de trabajo.',corto:'Mantenimiento',
+  n:['Recién arregla o repone cuando algo ya falló.',
+     'Hace mantenimiento de vez en cuando.',
+     'Tiene una rutina para revisar, mantener y reponer a tiempo.']}]},
+{id:'D3',n:3,nombre:'Ventas y medios digitales',oficial:'Comercial y digital',emoji:'🛍️',
+ resumen:'Cómo conoce a sus clientes, explica su producto, elige dónde vender y maneja sus cuentas digitales.',
+ items:[
+ {id:'3.1',t:'Conoce lo que sus clientes necesitan y lo comprueba con ellos.',corto:'Clientes',
+  n:['Ofrece lo mismo a todos, sin preguntar.',
+     'Conoce a sus clientes por experiencia, pero no les pregunta.',
+     'Pregunta, escucha y usa lo que le dicen para mejorar.']},
+ {id:'3.2',t:'Sabe explicar por qué su producto vale la pena.',corto:'Cómo lo ofrece',
+  n:['Lo ofrece de forma general, sin destacar nada.',
+     'Menciona algunas ventajas.',
+     'Explica con claridad la calidad, el uso y las condiciones, sin exagerar.']},
+ {id:'3.3',t:'Vende por los lugares o medios que de verdad le dan resultado.',corto:'Dónde vende',
+  n:['Vende por un solo lugar o medio y no revisa si le funciona.',
+     'Usa varios, pero no sabe cuál le vende más.',
+     'Sabe cuál le da más resultado y lo mantiene.']},
+ {id:'3.4',t:'Hace seguimiento a sus clientes para que vuelvan a comprar.',corto:'Seguimiento',
+  n:['No guarda contactos ni hace seguimiento.',
+     'Les escribe o llama de vez en cuando.',
+     'Guarda sus contactos, revisa quién vuelve y mejora según lo que le dicen.']},
+ {id:'3.5',t:'Ella misma maneja sus cuentas, su celular y sus cobros digitales.',corto:'Control digital',
+  n:['Otra persona maneja sus cuentas o conoce y usa sus claves.',
+     'Las maneja a medias o siempre necesita que alguien le ayude.',
+     'Ella maneja sus claves, sus cobros por QR o banco y su información con seguridad.']}]},
+{id:'D4',n:4,nombre:'Cuidado del medio ambiente',oficial:'Ambiental, circular y climática',emoji:'🌱',
+ resumen:'Cómo usa el agua, la luz y los materiales, qué hace con sus residuos y cómo le afecta el clima.',
+ items:[
+ {id:'4.1',t:'Controla cuánto material, agua y luz gasta.',corto:'Agua y luz',
+  n:['No sabe cuánto gasta.',
+     'Hace algunas cosas para ahorrar, sin medir.',
+     'Mide o comprueba que está gastando menos.']},
+ {id:'4.2',t:'Maneja sus residuos y desechos de forma segura.',corto:'Residuos',
+  n:['No tiene una forma definida de manejarlos.',
+     'Separa o vuelve a usar algunas cosas, de vez en cuando.',
+     'Evita generar residuos y les da un destino seguro.']},
+ {id:'4.3',t:'Aprovecha, repara o alarga la vida de sus materiales y productos.',corto:'Aprovecha',
+  n:['No lo toma en cuenta.',
+     'Lo hace de vez en cuando.',
+     'Lo hace siempre y le resulta conveniente para su negocio.']},
+ {id:'4.4',t:'Sabe qué problemas del clima pueden afectar su negocio.',corto:'Clima',
+  n:['No sabe cómo podría afectarle el clima.',
+     'Sabe que puede afectarle, pero en general.',
+     'Sabe qué le afectaría (lluvia, granizo, sequía, helada), a qué parte de su negocio y cuánto podría perder.']}]},
+{id:'D5',n:5,nombre:'Su autonomía económica',oficial:'Trabajo, género y autonomía económica',emoji:'⚖️',
+ resumen:'Si ella maneja su dinero, participa en las decisiones, usa sus herramientas y dispone de sus ganancias.',
+ privado:true,
+ items:[
+ {id:'5.1',t:'Ella maneja el dinero que entra al negocio.',corto:'Maneja su dinero',
+  n:['Otra persona maneja el dinero del negocio.',
+     'Lo manejan entre dos, pero ella no conoce toda la información.',
+     'Ella maneja el dinero, o lo comparte en igualdad y ve todas las cuentas.']},
+ {id:'5.2',t:'Ella participa en las decisiones sobre precios, compras, inversiones y deudas.',corto:'Decisiones',
+  n:['Deciden otras personas por ella.',
+     'Participa poco o solo en algunas decisiones.',
+     'Decide ella, o decide en igualdad con su pareja o su familia.']},
+ {id:'5.3',t:'Puede usar y decidir sobre sus herramientas, máquinas o su lugar de trabajo.',corto:'Herramientas',
+  n:['Necesita permiso de otra persona para usarlos.',
+     'Puede usarlos en parte, o no está segura de poder seguir usándolos.',
+     'Los usa y decide sobre ellos, o hay acuerdos claros con su familia.']},
+ {id:'5.4',t:'Reparte su tiempo entre el negocio, la casa y el cuidado sin agotarse.',corto:'Su tiempo',
+  n:['Está muy recargada y no logra organizarse.',
+     'Se da cuenta de la carga y ajusta algunas cosas.',
+     'Organiza apoyo, tareas y descanso de una forma que puede sostener.']},
+ {id:'5.5',t:'Puede ahorrar y decidir en qué usar sus ganancias.',corto:'Sus ganancias',
+  n:['No decide sobre sus ganancias o no le queda nada.',
+     'Decide solo en parte.',
+     'Decide cuánto ahorra, cuánto vuelve a invertir y en qué usa sus ganancias.']}]},
+{id:'D6',n:6,nombre:'Trámites, contactos y acceso',oficial:'Institucional y territorial',emoji:'🏛️',
+ resumen:'Qué trámites conoce, de quién depende para comprar, en qué grupos participa y si puede llegar a sus clientes.',
+ items:[
+ {id:'6.1',t:'Conoce los trámites y permisos que necesita su negocio.',corto:'Trámites',
+  n:['No conoce los trámites principales (licencia de funcionamiento, NIT, registro sanitario).',
+     'Conoce algunos, pero no sabe cuáles le corresponden.',
+     'Sabe cuáles le corresponden y ya los tiene o los está gestionando.']},
+ {id:'6.2',t:'Consigue sus materiales y servicios sin depender de una sola persona.',corto:'Proveedores',
+  n:['Depende de un solo proveedor y no tiene otra opción.',
+     'Tiene pocas opciones y no siempre le responden.',
+     'Tiene varios proveedores conocidos y ya comprobados.']},
+ {id:'6.3',t:'Participa en grupos, asociaciones o redes de emprendedoras que le sirven.',corto:'Grupos y redes',
+  n:['No participa en ningún grupo, asociación ni red.',
+     'Tiene contactos, pero se reúne o participa solo de vez en cuando.',
+     'Participa en un grupo o asociación que le trae información, ventas o apoyo.']},
+ {id:'6.4',t:'Puede llegar a sus clientes, ferias y mercados sin que el transporte o la distancia se lo impidan.',corto:'Llegar al mercado',
+  n:['El transporte, la distancia o el cuidado de su familia le impiden llegar.',
+     'Llega, pero de forma irregular o le cuesta mucho.',
+     'Organiza su transporte y sus tiempos para llegar de forma segura y constante.']}]}
+];
+
+/* ---------------- Devolución por dimensión y color ---------------- */
+const FEEDBACK={
+ D1:{ROJO:{msg:'Hoy el manejo del dinero es lo que más hay que reforzar: sin cuentas anotadas no se sabe si el negocio gana o pierde, y los precios se ponen a ojo. Es lo primero que conviene trabajar, porque los cambios se notan rápido.',
+   acc:['Empezar a anotar cada día lo que vende y lo que gasta, en un cuaderno o en el celular.','Separar el dinero del negocio del dinero de la casa.','Sacar el costo real de su producto que más vende, contando también su tiempo de trabajo.']},
+  AMARILLO:{msg:'Ya lleva algunas cuentas y saca sus precios, pero de forma incompleta o solo a veces. El siguiente paso es que sea un hábito y que la información le sirva para decidir.',
+   acc:['Anotar todos los días, no solo cuando se acuerda.','Incluir en el precio su tiempo de trabajo y la ganancia que quiere.','Calcular por adelantado cuánto va a entrar y cuánto tiene que pagar el próximo mes.']},
+  VERDE:{msg:'Maneja bien su dinero: anota, sabe sus costos y se organiza con anticipación. Es una base sólida para crecer.',
+   acc:['Usar sus cuentas para ver qué producto le deja más ganancia.','Con esa información puede evaluar con seguridad una compra grande o un préstamo.']},
+  GRIS:{msg:'Faltó información para calcular esta parte. No quiere decir que esté mal.',
+   acc:['Completar las preguntas que quedaron pendientes en la siguiente visita.']}},
+ D2:{ROJO:{msg:'La forma de producir todavía no está ordenada: cada vez se hace distinto, no hay control de calidad y se pierde producto sin saber cuánto. Ordenar el trabajo suele bajar costos de inmediato.',
+   acc:['Escribir los pasos de cómo hace su producto, en orden y con los tiempos.','Definir dos o tres cosas que siempre va a revisar antes de vender.','Anotar durante un mes qué se echa a perder y por qué.']},
+  AMARILLO:{msg:'Tiene un orden a medias y controla algunas cosas, pero todavía depende mucho de la práctica y no de una forma fija de trabajar.',
+   acc:['Dejar fijos los pasos que hoy cambian de una vez a otra.','Calcular cuánto puede producir antes de aceptar un pedido grande.','Revisar y mantener sus máquinas antes de que fallen.']},
+  VERDE:{msg:'Produce de forma ordenada y con calidad: sabe cuánto puede hacer, controla lo que sale y cuida sus equipos. Puede comprometerse con pedidos más grandes.',
+   acc:['Aprovechar este orden para tomar pedidos de mayor volumen.','Dejar sus pasos por escrito para poder enseñar a alguien que le ayude.']},
+  GRIS:{msg:'Faltó información para calcular esta parte. No quiere decir que esté mal.',
+   acc:['Completar las preguntas pendientes observando cómo trabaja.']}},
+ D3:{ROJO:{msg:'La parte de ventas es la más débil: ofrece a todos por igual, vende por un solo medio y no hace seguimiento. Además, puede que otra persona maneje sus cuentas o sus claves, algo importante de revisar.',
+   acc:['Preguntar a cinco clientes qué les gustó y qué cambiarían.','Elegir una forma clara de explicar por qué su producto vale la pena.','Manejar ella misma sus claves y sus cobros por QR o banco.']},
+  AMARILLO:{msg:'Vende por varios medios y conoce a sus clientes, pero sin saber cuál le funciona mejor ni guardar sus contactos. Ahí se pierde trabajo y se pierden ventas repetidas.',
+   acc:['Anotar durante un mes por dónde le llegó cada venta.','Guardar los contactos de sus clientes para volver a ofrecerles.','Revisar quién más conoce sus claves y sus cuentas.']},
+  VERDE:{msg:'Vende bien y con criterio: conoce a sus clientes, explica su producto con claridad, sabe qué medio le funciona y maneja sus cuentas con seguridad.',
+   acc:['Probar un mercado o cliente nuevo apoyándose en lo que ya sabe que funciona.','Usar sus registros de clientes para anticipar la demanda.']},
+  GRIS:{msg:'Faltó información para calcular esta parte. No quiere decir que esté mal.',
+   acc:['Completar las preguntas pendientes revisando cómo y dónde vende.']}},
+ D4:{ROJO:{msg:'Todavía no controla cuánto gasta en agua, luz o materiales, ni qué hace con sus residuos, y no tiene claro cómo podría afectarle el clima. Ahí suele haber dinero que se pierde sin darse cuenta.',
+   acc:['Fijarse durante un mes en cuál es su mayor gasto: agua, luz o material.','Darle un destino seguro a los residuos que genera.','Pensar qué pasaría con su negocio si hay lluvia fuerte, granizo o sequía.']},
+  AMARILLO:{msg:'Hace algunas cosas para ahorrar y reutilizar, pero de vez en cuando y sin medir. Con un poco más de constancia se convierte en ahorro real.',
+   acc:['Convertir en costumbre lo que hoy hace solo a veces.','Comprobar si de verdad está gastando menos.','Tener lista una alternativa por si el clima le corta la producción.']},
+  VERDE:{msg:'Cuida bien sus recursos: controla lo que gasta, maneja sus residuos, aprovecha materiales y sabe cómo le puede afectar el clima.',
+   acc:['Contar esto a sus clientes: es una ventaja para vender.','Revisar de vez en cuando si sus medidas siguen alcanzando.']},
+  GRIS:{msg:'Faltó información para calcular esta parte. No quiere decir que esté mal.',
+   acc:['Completar las preguntas pendientes observando el lugar de trabajo.']}},
+ D5:{ROJO:{msg:'Su autonomía económica está limitada: otra persona maneja el dinero, decide por ella o le condiciona el uso de sus herramientas, y la carga de trabajo y cuidado es alta. Esta parte se conversa en privado y con mucho cuidado.',
+   acc:['Conversar a solas, sin insistir si prefiere no responder.','Acordar que ella pueda ver las cuentas del negocio.','No proponer mejoras que le aumenten el trabajo sin que ella esté de acuerdo y tenga apoyo.']},
+  AMARILLO:{msg:'Participa en las decisiones y maneja parte del dinero, pero sin toda la información, y todavía le cuesta repartir su tiempo entre el negocio, la casa y el cuidado.',
+   acc:['Que pueda ver toda la información del dinero del negocio.','Acordar en casa quién decide sobre precios, compras e inversiones.','Organizar apoyo para el cuidado antes de aumentar la producción.']},
+  VERDE:{msg:'Tiene autonomía real: maneja su dinero o decide en igualdad, dispone de sus herramientas y de sus ganancias, y organiza su tiempo de forma sostenible.',
+   acc:['Dejar por escrito los acuerdos sobre el uso de las ganancias.','Su experiencia puede servir de ejemplo para otras emprendedoras del grupo.']},
+  GRIS:{msg:'Faltó información en esta parte, que se pregunta en privado y puede quedar sin responder.',
+   acc:['Retomar las preguntas pendientes en un momento a solas, sin insistir.']}},
+ D6:{ROJO:{msg:'El negocio está bastante solo: no conoce los trámites que le corresponden, depende de un solo proveedor, no participa en ningún grupo y le cuesta llegar a sus clientes o ferias.',
+   acc:['Averiguar qué trámites necesita su rubro (licencia, NIT, registro sanitario).','Buscar al menos otro proveedor para lo que más compra.','Acercarse a un grupo o asociación de emprendedoras de su zona.']},
+  AMARILLO:{msg:'Conoce algunas cosas y tiene contactos, pero sin continuidad: pocas opciones de proveedores, participación ocasional y acceso irregular a los mercados.',
+   acc:['Comprobar y dejar listos los proveedores alternativos.','Participar de forma constante en un grupo o asociación.','Organizar su transporte y sus tiempos para llegar a ferias con regularidad.']},
+  VERDE:{msg:'Está bien conectada: sabe qué trámites le corresponden, tiene varios proveedores, participa en grupos que le sirven y organiza bien cómo llegar a sus clientes.',
+   acc:['Usar su red para conseguir mejores precios o compras conjuntas.','Compartir sus contactos con otras emprendedoras del programa.']},
+  GRIS:{msg:'Faltó información para calcular esta parte. No quiere decir que esté mal.',
+   acc:['Completar las preguntas pendientes en el siguiente contacto.']}}
+};
+
+/* ---------------- Lugares y medios de venta ---------------- */
+const CANALES=[
+ {v:'Feria o mercado',d:'Ferias, mercados o ruedas de negocio.'},
+ {v:'Tienda o local propio',d:'Un espacio propio o alquilado donde atiende.'},
+ {v:'Desde su casa, por pedidos',d:'La gente le encarga y ella entrega o le van a buscar.'},
+ {v:'Puesto en la calle o ambulante',d:'Vende en la vía pública o recorriendo.'},
+ {v:'WhatsApp',d:'Ofrece y recibe pedidos por WhatsApp.'},
+ {v:'Facebook, Instagram o TikTok',d:'Publica y vende por redes sociales.'},
+ {v:'Página web o Marketplace',d:'Tienda en internet o plataformas de venta.'},
+ {v:'Entrega a domicilio o delivery',d:'Lleva el pedido hasta el cliente.'},
+ {v:'Venta a tiendas o mayoristas',d:'Vende por cantidad a quien luego revende.'},
+ {v:'Supermercados',d:'Sus productos están en un supermercado.'},
+ {v:'Por distribuidoras o revendedoras',d:'Otras personas venden sus productos.'},
+ {v:'Otro',d:'Algún otro medio o lugar no mencionado.'}
+];
+
+/* ---------------- Variables de línea de base (13) ---------------- */
+const BASE_ANTE=[
+ {id:'B01',t:'¿Hace cuánto tiempo funciona el emprendimiento?',tipo:'dual',s1:'Años',s2:'Meses'},
+ {id:'B02',t:'¿Cuántas personas trabajan en el emprendimiento?',tipo:'dual',s1:'Reciben pago',s2:'No reciben pago',hint:'Contar también a la emprendedora y a la familia que ayuda.'},
+ {id:'B03',t:'¿Cuántos días trabajó en los últimos 30 días?',tipo:'num',u:'días'},
+ {id:'B04',t:'¿Cuánto vendió aproximadamente en los últimos 30 días?',tipo:'num',u:'Bs',flags:['NS','NR']},
+ {id:'B05',t:'¿Cuánto gastó aproximadamente en los últimos 30 días?',tipo:'num',u:'Bs',hint:'Materiales, transporte, luz, agua, pagos a personas.',flags:['NS','NR']},
+ {id:'B06',t:'¿Cuántos productos o servicios hizo en los últimos 30 días?',tipo:'numtxt',u:'cantidad',ph2:'Unidad (ej.: prendas, panes, horas)'},
+ {id:'B07',t:'¿Cuántos productos se dañaron y ya no se pueden vender, en un mes?',tipo:'num',u:'productos',flags:['NS']},
+ {id:'B08',t:'¿Cuántos productos no se vendieron, en un mes?',tipo:'num',u:'productos',hint:'Están en buen estado pero se quedaron sin vender.',flags:['NS']},
+ {id:'B09',t:'¿Cuántas horas por semana dedica al negocio?',tipo:'num',u:'horas'},
+ {id:'B10',t:'¿Cuántas horas por semana dedica a la casa y al cuidado de su familia?',tipo:'num',u:'horas',hint:'Trabajo del hogar y cuidado que no se paga.',flags:['NR']},
+ {id:'B11',t:'Lugares y medios de venta',tipo:'canales'},
+ {id:'B12',t:'¿A cuántos clientes vendió en los últimos 30 días?',tipo:'num',u:'clientes',flags:['Estimado']},
+ {id:'B13',t:'¿Dejó de trabajar algún día por lluvia, falta de agua, corte de luz, transporte o falta de material?',tipo:'interrup'}
+];
+const BASE_POST=[
+ {id:'B01',t:'Días trabajados en los últimos 30 días',u:'días'},
+ {id:'B02',t:'Ventas aproximadas en los últimos 30 días',u:'Bs',pct:true},
+ {id:'B03',t:'Gastos aproximados en los últimos 30 días',u:'Bs',pct:true},
+ {id:'B04',t:'Anota sus ventas y sus costos (1 a 3)',u:'1–3'},
+ {id:'B05',t:'Horas por semana dedicadas al negocio',u:'horas'},
+ {id:'B06',t:'Horas por semana dedicadas a la casa y al cuidado',u:'horas'},
+ {id:'B07',t:'Productos o servicios hechos en los últimos 30 días',u:'cantidad',pct:true},
+ {id:'B08',t:'Productos dañados que ya no se pueden vender, en un mes',u:'productos'},
+ {id:'B09',t:'Productos que no se vendieron, en un mes',u:'productos'},
+ {id:'B10',t:'Lugares y medios de venta',tipo:'canales'},
+ {id:'B11',t:'Clientes a los que vendió',u:'clientes',pct:true},
+ {id:'B12',t:'Días que dejó de trabajar por clima, servicios o falta de material',u:'días'},
+ {id:'B13',t:'Personas que trabajan: reciben pago / no reciben pago',u:'personas',dual:true}
+];
+
+/* ---------------- Estado ---------------- */
+let fase=null, sel={apellidos:'',nombres:'',emp:null};
+let pasos=[], idx=0, R={};
+const $=s=>document.querySelector(s);
+const main=$('#main'), nav=$('#nav');
+
+/* ---------------- Cálculo del semáforo ---------------- */
+function colorDe(p){ if(p===null||p===undefined) return 'GRIS'; return p<1.67?'ROJO':(p<2.34?'AMARILLO':'VERDE'); }
+function emojiDe(c){ return c==='ROJO'?'🔴':c==='AMARILLO'?'🟡':c==='VERDE'?'🟢':'⚪'; }
+function textoDe(c){ return c==='ROJO'?'Para reforzar':c==='AMARILLO'?'En camino':c==='VERDE'?'Bien logrado':'Falta información'; }
+function hexDe(c){ return c==='ROJO'?'#F87171':c==='AMARILLO'?'#FBBF24':c==='VERDE'?'#34D399':'#9CA3AF'; }
+function pref(){ return fase==='expost'?'q_':'p_'; }
+/* Regla de suficiencia: se calcula si falta como máximo un ítem de la dimensión
+   (equivale a 4 de 5 en las dimensiones de cinco ítems, y 3 de 4 en las de cuatro). */
+function minimoValidos(d){ return Math.max(3, d.items.length-1); }
+
+function promDim(d,prefijo){
+  const pf=prefijo||pref();
+  const vals=d.items.map(it=>R[pf+it.id]).filter(v=>v===1||v===2||v===3);
+  const validos=vals.length;
+  if(validos<minimoValidos(d)) return {validos, total:d.items.length, prom:null, color:'GRIS'};
+  const prom=Math.round(vals.reduce((a,b)=>a+b,0)/validos*100)/100;
+  return {validos, total:d.items.length, prom, color:colorDe(prom)};
+}
+function perfil(prefijo){
+  const dims=DIMS.map(d=>Object.assign({dim:d},promDim(d,prefijo)));
+  const conValor=dims.filter(x=>x.prom!==null).map(x=>x.prom);
+  const general=conValor.length? Math.round(conValor.reduce((a,b)=>a+b,0)/conValor.length*100)/100 : null;
+  return {dims, general, colorGeneral:colorDe(general)};
+}
+function itemsBajos(){
+  const pf=pref(), out=[];
+  DIMS.forEach(d=>d.items.forEach(it=>{ if(R[pf+it.id]===1) out.push({dim:d,item:it}); }));
+  return out;
+}
+
+/* ---------------- Utilidades ---------------- */
+function hoy(){ return new Date().toLocaleDateString('es-BO'); }
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function guardarDraft(){ try{ localStorage.setItem(LSKEY_DRAFT,JSON.stringify({fase,sel,R,idx})); }catch(e){} }
+function limpiarDraft(){ localStorage.removeItem(LSKEY_DRAFT); }
+window.setCampo=function(k,v){ R[k]=(v===''?null:v); actualizarSig(); guardarDraft(); };
+function nombreAplica(){ return ((sel.apellidos||'')+' '+(sel.nombres||'')).trim(); }
+
+/* ---------------- Datos remotos ---------------- */
+async function cargarRoster(){
+  if(!API_URL){ROSTER=ROSTER_DEMO;return 'demo';}
+  try{
+    const r=await fetch(API_URL+'?action=roster');
+    const j=await r.json();
+    if(Array.isArray(j)&&j.length){ROSTER=j;return 'ok';}
+    ROSTER=ROSTER_DEMO;return 'vacio';
+  }catch(e){ROSTER=ROSTER_DEMO;return 'error';}
+}
+async function cargarExAnte(){
+  if(!API_URL)return;
+  try{
+    const r=await fetch(API_URL+'?action=exante');
+    const j=await r.json();
+    if(Array.isArray(j))j.forEach(x=>{EXANTE_PREVIO[x.codigo]=x;});
+  }catch(e){}
+}
+function exAntePrevio(){ return EXANTE_PREVIO[sel.emp&&sel.emp.codigo]||null; }
+function puntajeExAnte(itemId){
+  const p=exAntePrevio();
+  if(!p||!p.scores)return null;
+  const v=p.scores[itemId];
+  return (v===1||v===2||v===3)?v:null;
+}
+function exAnteDe(itemId){ return R['ea_p_'+itemId]??puntajeExAnte(itemId); }
+
+/* ---------------- Ayuda contextual ---------------- */
+function abrirAyuda(){
+  const p=window._paso;
+  const a=(p&&AYUDA[p.tipo])||AYUDA.general;
+  const cont=typeof a==='function'?a(p):a;
+  $('#modal-ayuda').innerHTML=`<div class="modal-fondo" onclick="cerrarAyuda(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="asa"></div>
+      <h3>${cont.titulo}</h3>
+      <div class="sub">Guía para llenar este apartado</div>
+      ${cont.bloques.map(b=>`<div class="bloque ${b.ejemplo?'ejemplo':''}">
+        <div class="bt">${b.t}</div>
+        ${b.lista?`<ul>${b.lista.map(x=>`<li>${x}</li>`).join('')}</ul>`:`<p>${b.p}</p>`}
+      </div>`).join('')}
+      <button class="btn btn-p" style="width:100%;margin-top:6px" onclick="cerrarAyuda()">Entendido</button>
+    </div></div>`;
+}
+function cerrarAyuda(e){ if(e&&e.target&&!e.target.classList.contains('modal-fondo'))return; $('#modal-ayuda').innerHTML=''; }
+
+/* ---------------- Contenidos de ayuda ---------------- */
+const AYUDA={
+ general:{titulo:'¿Cómo se llena la ficha?',bloques:[
+  {t:'Idea general',p:'Es una conversación, no un examen. Se pregunta con calma, se escucha y se anota lo que la emprendedora cuenta. Si algo no sabe o no quiere responder, se respeta.'},
+  {t:'Cómo avanzar',p:'Cada pantalla tiene una pregunta o un grupo de preguntas. Al terminar se toca <b>Siguiente</b>. Si se necesita corregir algo, se vuelve con la flecha ←.'}]},
+ consent:{titulo:'Consentimiento',bloques:[
+  {t:'Qué hacer',p:'Leer el texto en voz alta, con tranquilidad, antes de empezar. Asegurarse de que entendió que es voluntario y que puede no responder algunas preguntas.'},
+  {t:'Importante',p:'Si responde <b>No</b>, se cierra la ficha y no se aplica. No hay que insistir.'},
+  {t:'Ejemplo de cómo decirlo',ejemplo:true,p:'“Doña Julia, antes de empezar le cuento: esto es para conocer su negocio y poder apoyarla mejor. Nadie más va a ver sus respuestas con su nombre. Si hay algo que no quiere contestar, no hay problema. ¿Está de acuerdo en que conversemos?”'}]},
+ aplica:{titulo:'Mentora asignada',bloques:[
+  {t:'Qué registrar',p:'Los apellidos y nombres completos de la mentora asignada al emprendimiento, tal como figuran en su documento de identidad.'},
+  {t:'Ejemplo',ejemplo:true,p:'Apellidos: Rojas Terceros · Nombres: Ana Belén'}]},
+ elegir:{titulo:'Elegir el emprendimiento',bloques:[
+  {t:'Qué hacer',p:'Buscar por el nombre del emprendimiento, de la emprendedora o por el código. Al tocarlo, el código queda registrado automáticamente: no hay que escribirlo.'},
+  {t:'Cuidado',p:'Verificar que sea el emprendimiento correcto antes de continuar. Si no aparece en la lista, avisar al equipo técnico.'}]},
+ ident:{titulo:'Datos del emprendimiento',bloques:[
+  {t:'Nombre de la emprendedora',p:'Aparece cargado desde el padrón. Confirmarlo con ella y corregirlo si está mal escrito, incompleto o si usa otro nombre. Debe coincidir con su documento de identidad.'},
+  {t:'Dirección y teléfono',p:'Sirven para poder visitarla y hacerle seguimiento. Anotar una referencia clara, no solo la calle.'},
+  {t:'Ejemplo',ejemplo:true,p:'Apellidos: Mamani Flores · Nombres: Julia · Dirección: Av. Blanco Galindo km 4, frente al mercado, casa de reja verde · Teléfono: 70712345'}]},
+ base1:{titulo:'Números del negocio',bloques:[
+  {t:'Cómo preguntar',p:'Son cantidades aproximadas de los <b>últimos 30 días</b>. No hace falta que sean exactas: se busca un orden de magnitud que ella reconozca como cierto.'},
+  {t:'Si no sabe',p:'Usar <b>NS</b> si no sabe y <b>NR</b> si prefiere no responder. Nunca poner cero ni inventar un número.'},
+  {t:'Ejemplo',ejemplo:true,p:'“En este último mes, más o menos, ¿cuánto habrá vendido? No necesito el dato exacto, un aproximado está bien.” Si dice “unos 1.500 más o menos”, se anota 1500.'}]},
+ base2:{titulo:'Producción, pérdidas, tiempo y ventas',bloques:[
+  {t:'Lugares y medios de venta',p:'Primero se marcan <b>todos</b> los lugares o medios por los que ofrece sus productos. Después, entre esos mismos, se marcan los que ella siente que le venden más (uno o dos).'},
+  {t:'Productos dañados y no vendidos',p:'Son dos cosas distintas: <b>dañados</b> es lo que ya no se puede vender (se rompió, se venció, se manchó). <b>No vendidos</b> es lo que está bien pero se quedó sin venderse.'},
+  {t:'Horas de casa y cuidado',p:'Es el trabajo del hogar y del cuidado de la familia que no se paga. Ayuda a entender su carga real de trabajo.'},
+  {t:'Ejemplo',ejemplo:true,p:'“De todo lo que hizo este mes, ¿cuánto se le echó a perder o ya no sirve para vender?” → 6 panes. “¿Y cuánto quedó bien pero no se vendió?” → 20 panes.'}]},
+ dimintro:{titulo:'Cómo puntuar esta parte',bloques:[
+  {t:'La escala',lista:['<b>1</b> — todavía no lo hace o depende de otras personas.','<b>2</b> — lo hace a veces, a medias o solo en parte.','<b>3</b> — lo hace siempre y se puede comprobar.']},
+  {t:'Si no corresponde',p:'<b>NS</b> = no sabe · <b>NR</b> = no quiere responder · <b>NA</b> = no aplica a su negocio. Estas tres no bajan el puntaje: simplemente no se cuentan.'},
+  {t:'Regla de oro',p:'Se puntúa según lo que ella cuenta y lo que se puede observar, no según lo que uno supone. Leer las tres opciones sin sugerir cuál elegir.'}]},
+ item:{titulo:'Cómo puntuar y anotar la evidencia',bloques:[
+  {t:'Qué hacer',p:'Leer las tres frases y marcar la que más se parece a su situación de hoy. Si duda entre dos, elegir la de menor nivel y anotarlo en la evidencia.'},
+  {t:'Qué es la evidencia',p:'Es lo que respalda el puntaje: algo que se vio, un documento, un ejemplo que ella contó. Basta una frase corta.'},
+  {t:'Ejemplo',ejemplo:true,p:'Puntaje 2 · Evidencia: “Mostró un cuaderno donde anota las ventas de la feria, pero de las ventas por WhatsApp no anota nada.”'}]},
+ base1post:{titulo:'Números del negocio',bloques:[
+  {t:'Qué hacer',p:'Se anota cómo está el negocio <b>ahora</b>, en los últimos 30 días. No hay que buscar ni copiar los datos de la primera ficha: la comparación la hace después el equipo técnico.'},
+  {t:'Ejemplo',ejemplo:true,p:'“En este último mes, ¿cuánto habrá vendido más o menos?” → 1950.'}]},
+ factores:{titulo:'Factores externos',bloques:[
+  {t:'Para qué sirve',p:'Explica por qué los números subieron o bajaron por razones ajenas al programa. Es clave para interpretar bien los resultados.'},
+  {t:'Ejemplo',ejemplo:true,p:'“En septiembre estuvo enferma dos semanas y no produjo. Además la feria de la zona se suspendió por las lluvias.”'}]},
+
+ autonomia:{titulo:'Autonomía económica',bloques:[
+  {t:'Muy importante',p:'Estas preguntas se hacen <b>a solas</b>, sin la pareja, familiares ni otras personas presentes. Si prefiere no responder, se marca NR y se continúa.'},
+  {t:'Cómo preguntar',p:'Con naturalidad y sin juzgar. No hay que confrontar ni pedir detalles que no ofrezca ella misma.'},
+  {t:'Ejemplo',ejemplo:true,p:'“Cuando entra la plata de las ventas, ¿quién la guarda y quién decide en qué se usa?”'}]},
+ valoracion:{titulo:'Valoración del acompañamiento',bloques:[
+  {t:'Qué hacer',p:'Es la opinión de la emprendedora sobre los talleres y el acompañamiento, del 1 (muy poco) al 5 (mucho). Aclarar que responder con sinceridad ayuda a mejorar el programa.'},
+  {t:'Ejemplo',ejemplo:true,p:'“Del 1 al 5, ¿qué tan útil le resultó lo que trabajamos para el problema que usted quería resolver?”'}]},
+ resultado:{titulo:'Resultado y devolución',bloques:[
+  {t:'Qué hacer',p:'Mostrarle la pantalla y explicarle cada color con sus palabras. Es un retrato de su negocio hoy, no una calificación de ella.'},
+  {t:'Antes de cerrar',p:'Tocar <b>Guardar ficha</b>. Si no hay señal, la ficha queda guardada en el celular y se envía después desde ⚙️.'},
+  {t:'Ejemplo de devolución',ejemplo:true,p:'“Mire, en ventas usted está bien: sabe explicar su producto y sus clientes vuelven. Donde más podemos ayudarle es en las cuentas, porque todavía no sabemos si le está quedando ganancia.”'}]}
+};
+
+/* ---------------- Pasos ---------------- */
+function P(tipo,extra){ return Object.assign({tipo},extra||{}); }
+function construirPasos(){
+  pasos=[];
+  pasos.push(P('consent'));
+  pasos.push(P('ident'));
+  pasos.push(P('base1'));
+  pasos.push(P('base2'));
+  if(fase==='expost') pasos.push(P('factores'));
+  DIMS.forEach(d=>{
+    pasos.push(P('dimintro',{dim:d}));
+    d.items.forEach(it=>pasos.push(P('item',{dim:d,item:it})));
+  });
+  if(fase==='expost'){
+    pasos.push(P('autonomia'));
+    pasos.push(P('valoracion'));
+  }
+  pasos.push(P('resultado'));
+}
+function pasosVisibles(){ return pasos; }
+
+/* ---------------- Campos ---------------- */
+function cNum(id,label,unidad,hint,cod){
+  return `<div class="campo"><label>${cod?`<span class="cod">${cod}</span>`:''}${label}</label>
+  <input type="number" inputmode="decimal" data-k="${id}" value="${R[id]??''}" placeholder="${esc(unidad||'')}" oninput="setCampo('${id}',this.value===''?null:Number(this.value))">
+  ${hint?`<div class="hint">${hint}</div>`:''}</div>`;
+}
+function cTxt(id,label,ph,hint,cod){
+  return `<div class="campo"><label>${cod?`<span class="cod">${cod}</span>`:''}${label}</label>
+  <input type="text" data-k="${id}" value="${esc(R[id]||'')}" placeholder="${esc(ph||'')}" oninput="setCampo('${id}',this.value)">
+  ${hint?`<div class="hint">${hint}</div>`:''}</div>`;
+}
+function cArea(id,label,ph,hint){
+  return `<div class="campo"><label>${label}</label>
+  <textarea data-k="${id}" placeholder="${esc(ph||'')}" oninput="setCampo('${id}',this.value)">${esc(R[id]||'')}</textarea>
+  ${hint?`<div class="hint">${hint}</div>`:''}</div>`;
+}
+function cPills(id,label,ops,hint,clase){
+  return `<div class="campo"><label>${label}</label><div class="pills">
+  ${ops.map((o,i)=>`<button class="pill ${R[id]===o?'sel '+(clase&&clase[i]?clase[i]:''):''}" onclick="setPill('${id}','${esc(o)}')">${esc(o)}</button>`).join('')}
+  </div>${hint?`<div class="hint">${hint}</div>`:''}</div>`;
+}
+window.setPill=function(id,v){ R[id]=(R[id]===v?null:v); render(true); };
+function cDual(id,label,s1,s2,cod,hint){
+  return `<div class="campo"><label>${cod?`<span class="cod">${cod}</span>`:''}${label}</label><div class="dual">
+   <div><span class="sub">${s1}</span><input type="number" inputmode="decimal" data-k="${id}_a" value="${R[id+'_a']??''}" oninput="setCampo('${id}_a',this.value===''?null:Number(this.value))"></div>
+   <div><span class="sub">${s2}</span><input type="number" inputmode="decimal" data-k="${id}_b" value="${R[id+'_b']??''}" oninput="setCampo('${id}_b',this.value===''?null:Number(this.value))"></div>
+  </div>${hint?`<div class="hint">${hint}</div>`:''}</div>`;
+}
+function cMulti(id,label,ops,hint,limitarA){
+  const cur=R[id]||[];
+  const lista=limitarA?ops.filter(o=>limitarA.includes(o.v)):ops;
+  if(limitarA&&!lista.length) return `<div class="campo"><label>${label}</label>
+    <div class="hint">Primero marque por dónde ofrece sus productos.</div></div>`;
+  return `<div class="campo"><label>${label}</label>
+   ${lista.map(o=>`<button class="opt" style="padding:12px 14px;margin-bottom:8px" onclick="setMulti('${id}','${esc(o.v)}')">
+     <span class="tit" style="font-size:14px">${cur.includes(o.v)?'☑':'☐'} ${esc(o.v)}</span>
+     ${o.d?`<span class="desc">${esc(o.d)}</span>`:''}</button>`).join('')}
+   ${hint?`<div class="hint">${hint}</div>`:''}</div>`;
+}
+window.setMulti=function(id,v){
+  let cur=(R[id]||[]).slice();
+  cur=cur.includes(v)?cur.filter(x=>x!==v):cur.concat([v]);
+  R[id]=cur;
+  /* si deja de ofrecer por un medio, tampoco puede ser el que más le vende */
+  const dep=id.replace(/_of$/,'_mas');
+  if(dep!==id && R[dep]) R[dep]=R[dep].filter(x=>cur.includes(x));
+  render(true);
+};
+function chipsLectura(lista){
+  if(!lista||!lista.length) return '<span class="hint">Sin dato</span>';
+  return `<div class="dots">${lista.map(x=>`<span class="dot v3">${esc(x)}</span>`).join('')}</div>`;
+}
+function cFlags(id,flags){
+  return `<div class="nsnrna">${flags.map(f=>`<button class="mini-opt ${R[id+'_f']===f?'sel':''}" onclick="setFlag('${id}','${f}')">${f}</button>`).join('')}</div>`;
+}
+window.setFlag=function(id,f){ R[id+'_f']=(R[id+'_f']===f?null:f); if(R[id+'_f'])R[id]=null; render(true); };
+
+/* Guardar y restaurar el foco tras un redibujado */
+function recordarFoco(){
+  const el=document.activeElement;
+  if(el&&el.dataset&&el.dataset.k) window._foco={k:el.dataset.k,pos:el.selectionStart};
+}
+function restaurarFoco(){
+  const f=window._foco; if(!f)return;
+  const el=document.querySelector('[data-k="'+f.k+'"]');
+  if(el){ el.focus(); try{ el.setSelectionRange(f.pos,f.pos); }catch(e){} }
+  window._foco=null;
+}
+
+/* ---------------- Render ---------------- */
+function render(mantenerScroll){
+  const _y=(typeof window!=='undefined'&&window.scrollY)||0;
+  if(mantenerScroll) recordarFoco();
+  const vis=pasosVisibles();
+  if(idx>=vis.length) idx=vis.length-1;
+  const p=vis[idx];
+  window._paso=p;
+  $('#barra-fill').style.width=Math.round(idx/(vis.length-1)*100)+'%';
+  $('#btn-atras').style.display=idx===0?'none':'block';
+  guardarDraft();
+  nav.style.display='block';
+  $('#fab').style.display='flex';
+  $('#btn-sig').textContent='Siguiente';
+  let h='';
+  switch(p.tipo){
+    case 'consent': h=vConsent(); break;
+    case 'ident': h=vIdent(); break;
+    case 'base1': h=vBase(0,7); break;
+    case 'base2': h=vBase(7,13); break;
+    case 'factores': h=vFactores(); break;
+    case 'dimintro': h=vDimIntro(p.dim); break;
+    case 'item': h=vItem(p.dim,p.item); break;
+    case 'autonomia': h=vAutonomia(); break;
+    case 'valoracion': h=vValoracion(); break;
+    case 'resultado': renderResultado(); return;
+  }
+  main.innerHTML='<div class="pantalla">'+h+'</div>';
+  actualizarSig();
+  if(mantenerScroll){ window.scrollTo(0,_y); restaurarFoco(); } else window.scrollTo(0,0);
+}
+function paso(txt){ return `<div class="paso-num">${txt}</div>`; }
+
+/* ---------- Inicio ---------- */
+function irInicio(){
+  fase=null;sel={apellidos:'',nombres:'',emp:null};R={};idx=0;pasos=[];
+  nav.style.display='none';$('#fab').style.display='none';$('#barra-fill').style.width='0';
+  window._paso=null;
+  const draft=localStorage.getItem(LSKEY_DRAFT);
+  main.innerHTML=`<div class="pantalla">
+    <div class="big-emoji">🌼</div>
+    <h2 class="centrado">Ficha 360°</h2>
+    <p class="ayuda centrado">Una conversación para conocer cómo está el emprendimiento y saber en qué acompañarla mejor. No es un examen ni una calificación.</p>
+    ${draft?`<button class="opt" onclick="retomarDraft()"><span class="tit">🔄 Continuar donde quedó</span><span class="desc">Hay una ficha sin terminar guardada en este dispositivo</span></button>`:''}
+    <button class="opt fase-btn" onclick="elegirFase('exante')"><span class="ic">🌱</span><span class="tx"><b>Ficha inicial (ex ante)</b><span>Antes de los talleres: cómo está hoy el negocio</span></span></button>
+    <button class="opt fase-btn" onclick="elegirFase('expost')"><span class="ic">🌳</span><span class="tx"><b>Ficha final (post)</b><span>Al cierre: qué cambió durante el acompañamiento</span></span></button>
+    <p class="mini">Versión ${VERSION_INSTRUMENTO} · ${API_URL?'✅ Conectado a la base de datos':'⚠️ Modo prueba sin base de datos'}</p>
+  </div>`;
+}
+function retomarDraft(){
+  try{
+    const d=JSON.parse(localStorage.getItem(LSKEY_DRAFT));
+    fase=d.fase;sel=d.sel;R=d.R;
+    construirPasos();idx=Math.min(d.idx,pasos.length-1);
+    render();
+  }catch(e){limpiarDraft();irInicio();}
+}
+async function elegirFase(f){
+  fase=f;
+  main.innerHTML='<div class="pantalla centrado" style="padding-top:60px"><div class="big-emoji">⏳</div><p class="ayuda">Cargando lista de emprendimientos…</p></div>';
+  const st=await cargarRoster();
+  if(f==='expost')await cargarExAnte();
+  window._estadoRoster=st;
+  pantallaAplica();
+}
+/* ---------- ¿Quién aplica? ---------- */
+function pantallaAplica(){
+  window._paso={tipo:'aplica'};
+  nav.style.display='none';$('#fab').style.display='flex';$('#barra-fill').style.width='0';
+  main.innerHTML=`<div class="pantalla">
+    <div class="paso-num">Paso 1 de 2</div>
+    <h2>Mentora asignada</h2>
+    <p class="ayuda">Escriba sus apellidos y nombres completos.</p>
+    ${window._estadoRoster==='error'?'<div class="alerta">⚠️ No se pudo conectar a la base. Se muestra el padrón de ejemplo.</div>':''}
+    <div class="campo"><label>Apellidos</label>
+      <input type="text" data-k="ap" value="${esc(sel.apellidos||'')}" placeholder="Ej.: Rojas Terceros" oninput="sel.apellidos=this.value;valAplica()"></div>
+    <div class="campo"><label>Nombres</label>
+      <input type="text" data-k="no" value="${esc(sel.nombres||'')}" placeholder="Ej.: Ana Belén" oninput="sel.nombres=this.value;valAplica()"></div>
+    <button class="btn btn-p" id="btn-aplica" style="width:100%;margin-top:8px" onclick="pantallaElegir()">Continuar</button>
+    <p class="mini">Fase: ${fase==='exante'?'Ficha inicial 🌱':'Ficha final 🌳'}</p>
+  </div>`;
+  valAplica();
+}
+function valAplica(){
+  const b=document.getElementById('btn-aplica');
+  if(b) b.disabled=!((sel.apellidos||'').trim().length>1&&(sel.nombres||'').trim().length>1);
+}
+/* ---------- Elegir emprendimiento ---------- */
+function pantallaElegir(filtro){
+  window._paso={tipo:'elegir'};
+  nav.style.display='none';$('#fab').style.display='flex';
+  const q=(filtro!==undefined?filtro:(window._filtro||'')).toLowerCase().trim();
+  window._filtro=q;
+  const lista=ROSTER.filter(e=>{
+    if(!q)return true;
+    return ((e.emprendimiento||'')+' '+(e.nombres||'')+' '+(e.apellidos||'')+' '+(e.codigo||'')+' '+(e.municipio||'')).toLowerCase().includes(q);
+  });
+  main.innerHTML=`<div class="pantalla">
+    <div class="paso-num">Paso 2 de 2</div>
+    <h2>¿Con qué emprendimiento?</h2>
+    <p class="ayuda">Mentora: <b>${esc(nombreAplica())}</b> · ${fase==='exante'?'Ficha inicial':'Ficha final'}</p>
+    <div class="buscador"><input type="text" id="q" value="${esc(q)}" placeholder="Buscar por nombre, emprendedora o código" oninput="pantallaElegir(this.value)"></div>
+    <div class="contador">${lista.length} de ${ROSTER.length}</div>
+    ${lista.length?lista.map(e=>{
+      const j=ROSTER.indexOf(e);
+      return `<button class="opt" onclick="elegirEmp(${j})">
+      <span class="codigo-tag">${esc(e.codigo)}</span><br>
+      <span class="tit" style="margin-top:5px">${esc(e.emprendimiento||'(sin nombre)')}</span>
+      <span class="desc">${esc((e.nombres||'')+' '+(e.apellidos||''))} · ${esc(e.municipio||'')} · ${esc(e.rubro||'')}</span>
+    </button>`;}).join(''):'<div class="alerta">No se encontró ningún emprendimiento con esa búsqueda.</div>'}
+    <button class="opt" onclick="pantallaAplica()" style="color:var(--gris)">← Cambiar de mentora</button>
+  </div>`;
+  if(filtro!==undefined){ const el=document.getElementById('q');
+    if(el){ el.focus(); const n=(el.value||'').length; try{ el.setSelectionRange(n,n); }catch(e){} } }
+}
+function elegirEmp(i){
+  sel.emp=ROSTER[i];R={};
+  construirPasos();idx=0;
+  render();
+}
+
+/* ---------- Consentimiento ---------- */
+function vConsent(){
+  const esPost=fase==='expost';
+  return paso('Consentimiento')+
+  `<h2>Antes de empezar</h2>
+   <div class="nota">${esPost
+     ? 'Esta segunda conversación es para ver cómo está su negocio ahora y qué cambió durante el acompañamiento. Sus respuestas se usan solo para el programa y se presentan junto con las de las demás, sin su nombre. Participar es voluntario y puede no responder lo que no quiera.'
+     : 'Lo que conversemos servirá para conocer su emprendimiento, orientar el apoyo que va a recibir y ver los resultados del programa. Solo el equipo autorizado verá esta información y los resultados se presentan junto con los de las demás, sin su nombre. Participar es voluntario: puede no responder alguna pregunta y puede pedir que corrijamos algo. Responder no afecta su permanencia en el programa.'}</div>
+   ${cPills('cons_acepta','¿Está de acuerdo en participar y en que usemos la información así?',['Sí','No'],'',['ok','si-alerta'])}
+   ${R.cons_acepta==='No'?`<div class="err-envio">No autoriza la aplicación. Cerrar la ficha y agradecer su tiempo, sin insistir.</div>
+   <button class="btn btn-s" style="width:100%;margin-top:8px" onclick="finalizar()">Cerrar sin aplicar</button>`:''}
+   ${R.cons_acepta==='Sí'?cPills('cons_contacto','¿Podemos contactarla después para el seguimiento?',['Sí','No']):''}
+   ${R.cons_acepta==='Sí'?`<div class="nota" style="border-left-color:var(--verde)">Registrado el ${hoy()} a las ${new Date().toLocaleTimeString('es-BO',{hour:'2-digit',minute:'2-digit'})} por ${esc(nombreAplica())}.</div>`:''}`;
+}
+
+/* ---------- Identificación ---------- */
+function vIdent(){
+  const e=sel.emp, prev=exAntePrevio();
+  /* Nombre de la emprendedora: se precarga del padrón (o de la ficha inicial en el post)
+     y la mentora lo confirma o corrige. */
+  if(R.em_apellidos===undefined) R.em_apellidos=(prev&&prev.emprendedora_apellidos)||e.apellidos||'';
+  if(R.em_nombres===undefined)   R.em_nombres=(prev&&prev.emprendedora_nombres)||e.nombres||'';
+  return paso('Datos del emprendimiento')+
+  `<h2>Identificación</h2>
+   <div class="tarjeta">
+     <div style="font-size:12px;color:var(--gris);margin-bottom:4px">Código</div>
+     <div><span class="codigo-tag" style="font-size:14px">${esc(e.codigo)}</span></div>
+     <div style="margin-top:12px;font-size:15px;font-weight:800;color:#fff">${esc(e.emprendimiento||'')}</div>
+     <div style="font-size:13px;color:var(--gris);margin-top:3px">${esc((e.nombres||'')+' '+(e.apellidos||''))}</div>
+     <div style="font-size:12.5px;color:var(--gris);margin-top:6px">Rubro: <b style="color:#E4DEF7">${esc(e.rubro||'—')}</b> · Municipio: <b style="color:#E4DEF7">${esc(e.municipio||'—')}</b></div>
+     <div style="font-size:12.5px;color:var(--gris);margin-top:3px">Aplica: <b style="color:#E4DEF7">${esc(nombreAplica())}</b></div>
+
+   </div>
+   <h3>Datos de la emprendedora</h3>
+   <p class="ayuda" style="margin-bottom:12px">Confirmar con ella y corregir si hace falta.</p>
+   ${cTxt('em_apellidos','Apellidos de la emprendedora','Ej.: Mamani Flores')}
+   ${cTxt('em_nombres','Nombres de la emprendedora','Ej.: Julia')}
+   ${cTxt('id_zona','Dirección del emprendimiento','Calle, número, zona y una referencia','Sirve para poder visitarla y hacerle seguimiento.')}
+   ${cTxt('id_tel','Teléfono de contacto','Número de celular')}`;
+}
+
+/* ---------- Línea de base ---------- */
+function vBase(desde,hasta){
+  if(fase==='exante'){
+    const campos=BASE_ANTE.slice(desde,hasta).map(b=>{
+      let h='';
+      if(b.tipo==='dual') h=cDual('b_'+b.id,b.t,b.s1,b.s2,b.id,b.hint);
+      else if(b.tipo==='numtxt') h=`<div class="campo"><label><span class="cod">${b.id}</span>${b.t}</label><div class="dual">
+         <div><span class="sub">Cantidad</span><input type="number" inputmode="decimal" data-k="b_${b.id}" value="${R['b_'+b.id]??''}" oninput="setCampo('b_${b.id}',this.value===''?null:Number(this.value))"></div>
+         <div><span class="sub">Unidad</span><input type="text" data-k="b_${b.id}_u" value="${esc(R['b_'+b.id+'_u']||'')}" placeholder="${esc(b.ph2||'')}" oninput="setCampo('b_${b.id}_u',this.value)"></div></div></div>`;
+      else if(b.tipo==='canales') h=`<div class="campo"><label><span class="cod">${b.id}</span>${b.t}</label></div>
+         ${cMulti('b_'+b.id+'_of','¿Por qué medios o lugares ofrece sus productos?',CANALES,'Marque todos los que use.')}
+         ${cMulti('b_'+b.id+'_mas','¿Por cuáles considera que vende más?',CANALES,'Marque uno o dos, los que más le venden.',R['b_'+b.id+'_of']||[])}`;
+      else if(b.tipo==='interrup') h=`<div class="campo"><label><span class="cod">${b.id}</span>${b.t}</label>
+         <div class="pills">${['No','Sí'].map(o=>`<button class="pill ${R['b_'+b.id]===o?'sel '+(o==='Sí'?'si-alerta':'ok'):''}" onclick="setPill('b_${b.id}','${o}')">${o}</button>`).join('')}</div>
+         ${R['b_'+b.id]==='Sí'?`<div class="dual" style="margin-top:10px">
+            <div><span class="sub">¿Cuántos días?</span><input type="number" inputmode="decimal" data-k="b_${b.id}_d" value="${R['b_'+b.id+'_d']??''}" oninput="setCampo('b_${b.id}_d',this.value===''?null:Number(this.value))"></div>
+            <div><span class="sub">¿Cuánto dejó de ganar? (Bs)</span><input type="number" inputmode="decimal" data-k="b_${b.id}_p" value="${R['b_'+b.id+'_p']??''}" oninput="setCampo('b_${b.id}_p',this.value===''?null:Number(this.value))"></div></div>`:''}
+         </div>`;
+      else h=cNum('b_'+b.id,b.t,b.u,b.hint,b.id);
+      if(b.flags) h=h.replace(/<\/div>$/, cFlags('b_'+b.id,b.flags)+'</div>');
+      return h;
+    }).join('');
+    return paso(`Números del negocio · ${desde+1}–${hasta} de 13`)+
+     `<h2>${desde===0?'Cómo va el negocio':'Producción, pérdidas y tiempo'}</h2>
+      <p class="ayuda">Son cantidades aproximadas de los últimos 30 días. Si no sabe, marcar NS; si prefiere no responder, NR. No poner cero por poner.</p>
+      ${campos}`;
+  }
+  const campos=BASE_POST.slice(desde,hasta).map(b=>{
+    if(b.tipo==='canales'){
+      return `<div class="campo"><label><span class="cod">${b.id}</span>${b.t}</label></div>
+        ${cMulti('bp_'+b.id+'_of','¿Por qué medios o lugares ofrece sus productos?',CANALES,'Marque todos los que use.')}
+        ${cMulti('bp_'+b.id+'_mas','¿Por cuáles considera que vende más?',CANALES,'Marque uno o dos, los que más le venden.',R['bp_'+b.id+'_of']||[])}`;
+    }
+    if(b.dual){
+      return `<div class="campo"><label><span class="cod">${b.id}</span>${b.t}</label>
+        <div class="dual">
+          <div><span class="sub">Reciben pago</span><input type="number" inputmode="decimal" data-k="bp_${b.id}_a" value="${R['bp_'+b.id+'_a']??''}" oninput="setCampo('bp_${b.id}_a',this.value===''?null:Number(this.value))"></div>
+          <div><span class="sub">No reciben pago</span><input type="number" inputmode="decimal" data-k="bp_${b.id}_b" value="${R['bp_'+b.id+'_b']??''}" oninput="setCampo('bp_${b.id}_b',this.value===''?null:Number(this.value))"></div>
+        </div></div>`;
+    }
+    return cNum('bp_'+b.id,b.t,b.u,b.hint,b.id);
+  }).join('');
+  return paso(`Números del negocio · ${desde+1}–${hasta} de 13`)+
+   `<h2>${desde===0?'Cómo va el negocio ahora':'Producción, pérdidas, tiempo y ventas'}</h2>
+    <p class="ayuda">Son cantidades aproximadas de los últimos 30 días.</p>
+    ${campos}`;
+}
+function vFactores(){
+  return paso('Contexto')+`<h2>¿Qué pasó estos meses?</h2>
+   <p class="ayuda">Anotar lo que haya influido en los resultados y no dependa del programa.</p>
+   ${cArea('factores','Situaciones que afectaron al negocio','Ferias, temporada alta o baja, enfermedad, subida de precios, lluvias…')}`;
+}
+
+/* ---------- Semáforo ---------- */
+function vDimIntro(d){
+  const pf=pref();
+  const hechos=d.items.filter(it=>R[pf+it.id]!==undefined&&R[pf+it.id]!==null).length;
+  return paso(`Parte ${d.n} de 6`)+
+  `<div class="centrado"><div class="big-emoji">${d.emoji}</div></div>
+   <h2 class="centrado">${d.nombre}</h2>
+   <p class="ayuda centrado">${d.resumen}</p>
+   <div class="nota"><b>Para cada frase, marcar la opción que más se parece a su situación de hoy:</b><br>
+   <b>1</b> — todavía no lo hace o depende de otras personas · <b>2</b> — lo hace a veces o a medias · <b>3</b> — lo hace siempre y se puede comprobar.<br>
+   Si no sabe, no quiere responder o no le corresponde: <b>NS</b>, <b>NR</b> o <b>NA</b>. Esas opciones no bajan el puntaje.</div>
+   ${d.privado?'<div class="alerta">🔒 Esta parte se conversa a solas, sin la pareja, familiares ni otras personas presentes.</div>':''}
+   <div class="nota" style="border-left-color:var(--prim2)">Son ${d.items.length} preguntas. ${hechos?`Ya respondidas: <b>${hechos} de ${d.items.length}</b>.`:'Leer las tres opciones completas antes de que ella elija.'}</div>`;
+}
+function vItem(d,it){
+  const pf=pref(), val=R[pf+it.id];
+  return paso(`${d.emoji} ${d.nombre} · ${it.id}`)+
+  `<h2>${it.t}</h2>
+   ${it.n.map((tx,i)=>`<button class="opt ${val===i+1?'sel':''}" onclick="setItem('${pf+it.id}',${i+1})">
+     <span class="nivel n${i+1}">${['1 · Todavía no','2 · A veces o a medias','3 · Siempre y se comprueba'][i]}</span><br>${tx}</button>`).join('')}
+   <div class="nsnrna">${['NS','NR','NA'].map(f=>`<button class="mini-opt ${val===f?'sel':''}" onclick="setItem('${pf+it.id}','${f}')">${f}</button>`).join('')}</div>
+   <div class="hint" style="margin:-4px 0 12px;font-size:11.5px">NS = no sabe · NR = prefiere no responder · NA = no le corresponde. No cuentan como cero.</div>
+   <div class="evid"><label>¿En qué se nota? (evidencia)</label>
+     <input type="text" data-k="e_${it.id}" value="${esc(R['e_'+it.id]||'')}" placeholder="Lo que mostró, contó o se pudo ver…" oninput="setCampo('e_${it.id}',this.value)"></div>`;
+}
+window.setItem=function(k,v){ R[k]=(R[k]===v?null:v); render(true); };
+
+/* ---------- Autonomía (post) ---------- */
+const PREG_AUTON=[
+ {id:'au1',t:'¿Quién maneja hoy el dinero que entra al negocio?',ops:['Ella','En igualdad con su pareja o familia','Otra persona','Prefiere no responder'],ph:'¿En qué se nota?'},
+ {id:'au2',t:'¿Quién decide sobre precios, compras, inversiones y deudas?',ops:['Ella','En igualdad con su pareja o familia','Otra persona','Prefiere no responder'],ph:'Un ejemplo reciente'},
+ {id:'au3',t:'Después del programa, ¿maneja más, igual o menos su propio dinero?',ops:['Más','Igual','Menos'],ph:'¿Por qué?'},
+ {id:'au4',t:'Después del programa, ¿su carga de trabajo y de cuidado bajó, quedó igual o subió?',ops:['Bajó','Igual','Subió'],ph:'¿En cuántas horas, más o menos?'},
+ {id:'au5',t:'¿Puede ahorrar o decidir en qué usar sus ganancias?',ops:['Sí','En parte','No','Prefiere no responder'],ph:'¿En qué se nota?'}
+];
+function vAutonomia(){
+  return paso('Su autonomía económica')+
+  `<h2>Sobre su dinero y su tiempo</h2>
+   <div class="alerta">🔒 Conversar a solas. Si prefiere no responder, marcar esa opción y seguir adelante.</div>
+   ${PREG_AUTON.map(q=>`<div class="fila-sn">
+     <div class="txt">${q.t}</div>
+     <div class="pills">${q.ops.map(o=>`<button class="pill ${R[q.id]===o?'sel':''}" onclick="setPill('${q.id}','${esc(o)}')">${esc(o)}</button>`).join('')}</div>
+     <input type="text" data-k="${q.id}_e" style="margin-top:10px" value="${esc(R[q.id+'_e']||'')}" placeholder="${q.ph}" oninput="setCampo('${q.id}_e',this.value)">
+   </div>`).join('')}`;
+}
+
+/* ---------- Valoración (post) ---------- */
+const ITEMS_VALOR=[
+ {id:'v1',t:'¿Le sirvió para el problema que quería resolver?'},
+ {id:'v2',t:'¿Se entendieron los talleres y las herramientas?'},
+ {id:'v3',t:'¿Pudo aplicarlo en su emprendimiento?'},
+ {id:'v4',t:'¿Cómo fue el acompañamiento que recibió?'},
+ {id:'v5',t:'¿Se siente con confianza para seguir sola?'}
+];
+function vValoracion(){
+  return paso('Su opinión')+
+  `<h2>¿Cómo le pareció el acompañamiento?</h2>
+   <p class="ayuda">Del 1 al 5, donde 1 es muy poco y 5 es mucho. Responder con sinceridad ayuda a mejorar el programa.</p>
+   ${ITEMS_VALOR.map(v=>`<div class="fila-sn">
+     <div class="txt">${v.t}</div>
+     <div class="pills escala5">${[1,2,3,4,5].map(n=>`<button class="pill ${R[v.id]===n?'sel':''}" onclick="setPill5('${v.id}',${n})">${n}</button>`).join('')}</div>
+     <input type="text" data-k="${v.id}_c" style="margin-top:10px" value="${esc(R[v.id+'_c']||'')}" placeholder="¿Algo que quiera agregar?" oninput="setCampo('${v.id}_c',this.value)">
+   </div>`).join('')}`;
+}
+window.setPill5=function(id,n){ R[id]=(R[id]===n?null:n); render(true); };
+
+/* ---------- Validación y navegación ---------- */
+function actualizarSig(){
+  const p=window._paso; let ok=true;
+  if(!p){ $('#btn-sig').disabled=false; return; }
+  if(p.tipo==='consent') ok=(R.cons_acepta==='Sí');
+  else if(p.tipo==='item'){ const v=R[pref()+p.item.id]; ok=(v===1||v===2||v===3||v==='NS'||v==='NR'||v==='NA'); }
+  $('#btn-sig').disabled=!ok;
+}
+function siguiente(){ const vis=pasosVisibles(); if($('#btn-sig').disabled)return; if(idx<vis.length-1){idx++;render();} }
+function atras(){ if(idx>0){idx--;render();} }
+
+/* ---------- Resultado ---------- */
+function anillo(gen,color){
+  const r=62,c=2*Math.PI*r;
+  return `<div class="anillo-wrap"><div class="anillo">
+    <svg width="150" height="150" viewBox="0 0 150 150">
+      <circle cx="75" cy="75" r="${r}" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="13"/>
+      <circle id="anillo-p" cx="75" cy="75" r="${r}" fill="none" stroke="${hexDe(color)}" stroke-width="13"
+        stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c}" style="transition:stroke-dashoffset 1.3s cubic-bezier(.4,0,.2,1)"/>
+    </svg>
+    <div class="num"><b>${gen!==null?gen.toFixed(2):'—'}</b><span>de 3,00</span></div>
+  </div></div>`;
+}
+function renderResultado(){
+  nav.style.display='none';
+  $('#fab').style.display='flex';
+  $('#barra-fill').style.width='100%';
+  const pf=pref(), per=perfil(pf);
+  const bajos=itemsBajos();
+
+  let cards='',delay=0.12;
+  per.dims.forEach((x,k)=>{
+    const fb=FEEDBACK[x.dim.id][x.color];
+    const dots=x.dim.items.map(it=>{
+      const v=R[pf+it.id];
+      const cls=(v===1||v===2||v===3)?'v'+v:'v0';
+      const mk=v===3?'✓':v===2?'~':v===1?'✗':(v||'·');
+      return `<span class="dot ${cls}">${mk} ${it.corto}</span>`;
+    }).join('');
+    cards+=`<div class="sem-card ${x.color}" style="animation-delay:${delay}s">
+      <div class="sem-top"><div class="sem-luz ${x.color}">${x.dim.emoji}</div>
+      <div><div class="sem-nombre">${x.dim.nombre}</div>
+        <div class="sem-estado ${x.color}">${emojiDe(x.color)} ${textoDe(x.color)}${x.prom!==null?' · '+x.prom.toFixed(2)+' de 3':''}</div></div></div>
+      <div class="dots">${dots}</div>
+      <div class="panorama">${fb.msg}</div>
+      <div class="acciones"><div class="a-tit">${x.color==='VERDE'?'Para seguir creciendo':x.color==='GRIS'?'Para completar':'Por dónde empezar'}</div>
+        ${fb.acc.map(a=>`<div class="reco"><span>→</span><span>${a}</span></div>`).join('')}
+      </div>
+    </div>`;
+    delay+=0.1;
+  });
+
+  let bloqueLogros='';
+  if(fase==='expost'){
+    const lg=[];
+    if(R.au3==='Más') lg.push('💪 Ahora maneja más su propio dinero');
+    if(R.au5==='Sí') lg.push('🏦 Puede ahorrar y decidir en qué usar sus ganancias');
+    if(R.au4==='Bajó') lg.push('⏱️ Bajó su carga de trabajo y de cuidado');
+    const mas=(R.bp_B10_mas||[]);
+    if(mas.length) lg.push('🛍️ Hoy vende sobre todo por: '+mas.join(', '));
+    if(lg.length) bloqueLogros=`<div class="logros"><h3>Para destacar</h3>
+      ${lg.map(x=>`<div class="logro"><span>${x.slice(0,2)}</span><span>${esc(x.slice(2))}</span></div>`).join('')}</div>`;
+  }
+  const menor=per.dims.filter(x=>x.prom!==null).sort((a,b)=>a.prom-b.prom)[0];
+  const msj = fase==='expost'
+    ? 'Así está su negocio al cierre del acompañamiento. Conversar los resultados con ella antes de guardar.'
+    : 'Este es el punto de partida. Explicarle cada color con sus palabras y en qué se va a trabajar.';
+
+  main.innerHTML=`<div class="pantalla">
+    <h2 class="centrado" style="margin-top:4px">${fase==='exante'?'Semáforo de su negocio':'Semáforo final'}<br><span style="font-weight:700;font-size:16px;color:var(--prim-osc)">${esc(sel.emp.emprendimiento||sel.emp.codigo)}</span></h2>
+    ${anillo(per.general,per.colorGeneral)}
+    <p class="centrado" style="margin:2px 0 14px"><span class="sem-estado ${per.colorGeneral}" style="font-size:14px">${emojiDe(per.colorGeneral)} ${textoDe(per.colorGeneral)}</span></p>
+    ${bloqueLogros}
+    ${menor?`<div class="nota"><b>Donde más se necesita apoyo:</b> ${menor.dim.nombre} (${menor.prom.toFixed(2)}).${bajos.length?` Hay ${bajos.length} pregunta(s) en el nivel más bajo para conversar con calma.`:''}</div>`:''}
+    ${cards}
+    <p class="msj-final">${msj}</p>
+    <div id="zona-envio">
+      <button class="btn btn-g" style="width:100%;margin-top:10px" onclick="enviar()">💾 Guardar ficha</button>
+      <button class="btn btn-s" style="width:100%;margin-top:10px" onclick="volverRevisar()">← Revisar respuestas</button>
+    </div>
+    <p class="mini">${esc(sel.emp.codigo)} · ${fase==='exante'?'Ficha inicial':'Ficha final'} · ${hoy()} · Aplicó: ${esc(nombreAplica())} · v${VERSION_INSTRUMENTO}</p>
+  </div>`;
+  const c=2*Math.PI*62;
+  const off=per.general!==null?c*(1-per.general/3):c;
+  setTimeout(()=>{const el=document.getElementById('anillo-p');if(el)el.style.strokeDashoffset=off;},100);
+  window.scrollTo(0,0);
+}
+function volverRevisar(){ idx=pasos.length-2; nav.style.display='block'; render(); }
+
+/* ---------------- Envío ---------------- */
+function armarPayload(){
+  const pf=pref(), per=perfil(pf);
+  const scores={}, evid={};
+  DIMS.forEach(d=>d.items.forEach(it=>{ scores[it.id]=R[pf+it.id]??''; evid[it.id]=R['e_'+it.id]||''; }));
+  const base={};
+  if(fase==='exante') BASE_ANTE.forEach(b=>{
+    if(b.tipo==='canales'){
+      const of=R['b_'+b.id+'_of']||[], mas=R['b_'+b.id+'_mas']||[];
+      base[b.id+'_ofrece']=of.join('; '); base[b.id+'_mas']=mas.join('; ');
+      base[b.id]=of.length; base[b.id+'_mas_n']=mas.length;
+      return;
+    }
+    base[b.id]=R['b_'+b.id]??'';
+    if(R['b_'+b.id+'_a']!=null||R['b_'+b.id+'_b']!=null) base[b.id]=(R['b_'+b.id+'_a']??'')+' / '+(R['b_'+b.id+'_b']??'');
+    if(R['b_'+b.id+'_f']) base[b.id]=R['b_'+b.id+'_f'];
+    if(R['b_'+b.id+'_u']) base[b.id+'_u']=R['b_'+b.id+'_u'];
+    if(R['b_'+b.id+'_d']!=null) base[b.id+'_dias']=R['b_'+b.id+'_d'];
+    if(R['b_'+b.id+'_p']!=null) base[b.id+'_perdida']=R['b_'+b.id+'_p'];
+  });
+  else BASE_POST.forEach(b=>{
+    if(b.tipo==='canales'){
+      const of=R['bp_'+b.id+'_of']||[], mas=R['bp_'+b.id+'_mas']||[];
+      base[b.id+'_ofrece']=of.join('; '); base[b.id+'_mas']=mas.join('; ');
+      base[b.id]=of.length; base[b.id+'_mas_n']=mas.length;
+      return;
+    }
+    base[b.id]=R['bp_'+b.id]??'';
+    if(b.dual) base[b.id]=(R['bp_'+b.id+'_a']??'')+' / '+(R['bp_'+b.id+'_b']??'');
+  });
+  const dimsOut={};
+  per.dims.forEach(x=>{ dimsOut[x.dim.id]={nombre:x.dim.nombre,oficial:x.dim.oficial,
+    validos:x.validos,total:x.total,prom:x.prom,color:x.color}; });
+  const menor=per.dims.filter(x=>x.prom!==null).sort((a,b)=>a.prom-b.prom)[0];
+  const p={
+    fase, version:VERSION_INSTRUMENTO,
+    fecha:new Date().toISOString(), fecha_local:hoy(),
+    codigo:sel.emp.codigo,
+    aplica_apellidos:sel.apellidos||'', aplica_nombres:sel.nombres||'', mentora:nombreAplica(),
+    emprendimiento:sel.emp.emprendimiento||'',
+    emprendedora_apellidos:R.em_apellidos||sel.emp.apellidos||'',
+    emprendedora_nombres:R.em_nombres||sel.emp.nombres||'',
+    apellidos:sel.emp.apellidos||'', nombres:sel.emp.nombres||'',
+    municipio:sel.emp.municipio||'', rubro:sel.emp.rubro||'',
+    consentimiento:{acepta:R.cons_acepta||'',contacto:R.cons_contacto||''},
+    identificacion:{direccion:R.id_zona||'',telefono:R.id_tel||''},
+    base, scores, evidencias:evid, dimensiones:dimsOut,
+    proms:per.dims.map(x=>x.prom), colores:per.dims.map(x=>x.color), validos:per.dims.map(x=>x.validos),
+    general:per.general, color_general:per.colorGeneral,
+    dimension_menor:menor?menor.dim.nombre:'',
+    items_nivel1:itemsBajos().map(c=>c.item.id).join('; '),
+    respuestas:R
+  };
+  if(fase==='expost'){
+    p.factores=R.factores||'';
+    p.autonomia={};PREG_AUTON.forEach(q=>{p.autonomia[q.id]={pregunta:q.t,respuesta:R[q.id]||'',detalle:R[q.id+'_e']||''};});
+    p.valoracion={};ITEMS_VALOR.forEach(v=>{p.valoracion[v.id]={item:v.t,valor:R[v.id]??'',comentario:R[v.id+'_c']||''};});
+  }
+  return p;
+}
+async function enviar(){
+  const z=$('#zona-envio'), payload=armarPayload();
+  if(!API_URL){
+    z.innerHTML=`<div class="ok-envio">✅ Ficha registrada en modo prueba (no se envió a la base).</div>
+    <button class="btn btn-s" style="width:100%" onclick="descargarRespaldo()">⬇️ Descargar respaldo</button>
+    <button class="btn btn-p" style="width:100%;margin-top:10px" onclick="finalizar()">Terminar</button>`;
+    return;
+  }
+  z.innerHTML='<div class="ok-envio" style="background:var(--lila);color:var(--prim-osc)"><span class="spinner" style="border-top-color:var(--prim);border-color:rgba(167,139,250,.35)"></span> Enviando…</div>';
+  if(MODO_OPACO){
+    try{
+      await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(payload)});
+      limpiarDraft();
+      z.innerHTML=`<div class="ok-envio">📤 Ficha enviada.<br><span style="font-weight:500;font-size:12px">(Modo limitado: verificar que apareció en la hoja de cálculo.)</span></div>
+      <button class="btn btn-s" style="width:100%" onclick="descargarRespaldo()">⬇️ Descargar respaldo</button>
+      <button class="btn btn-p" style="width:100%;margin-top:10px" onclick="finalizar()">Terminar</button>`;
+    }catch(e){ colaFallo(z,payload); }
+    return;
+  }
+  try{
+    const r=await fetch(API_URL,{method:'POST',body:JSON.stringify(payload)});
+    const j=await r.json();
+    if(j.status==='ok'){
+      limpiarDraft();
+      z.innerHTML=`<div class="ok-envio">✅ Ficha guardada en la base de datos.</div>
+      <button class="btn btn-p" style="width:100%" onclick="finalizar()">Terminar</button>`;
+    }else if(j.status==='duplicado'){
+      z.innerHTML=`<div class="err-envio">⚠️ Este emprendimiento ya tiene una ficha ${fase==='exante'?'inicial':'final'} registrada. No se guardó de nuevo.</div>
+      <button class="btn btn-s" style="width:100%" onclick="descargarRespaldo()">⬇️ Descargar respaldo</button>
+      <button class="btn btn-p" style="width:100%;margin-top:10px" onclick="finalizar()">Terminar</button>`;
+    }else throw new Error(j.mensaje||'error');
+  }catch(e){ colaFallo(z,payload); }
+}
+function colaFallo(z,payload){
+  guardarCola(payload);
+  z.innerHTML=`<div class="err-envio">📶 Sin señal. La ficha quedó guardada en este celular.</div>
+  <button class="btn btn-p" style="width:100%" onclick="reintentarCola()">🔄 Reintentar envío</button>
+  <button class="btn btn-s" style="width:100%;margin-top:10px" onclick="descargarRespaldo()">⬇️ Descargar respaldo</button>
+  <button class="btn btn-s" style="width:100%;margin-top:10px" onclick="finalizar()">Terminar por ahora</button>`;
+}
+function guardarCola(p){
+  const cola=JSON.parse(localStorage.getItem(LSKEY_COLA)||'[]');cola.push(p);
+  localStorage.setItem(LSKEY_COLA,JSON.stringify(cola));
+}
+async function reintentarCola(){
+  const cola=JSON.parse(localStorage.getItem(LSKEY_COLA)||'[]');
+  if(!cola.length){finalizar();return;}
+  let restantes=[];
+  for(const p of cola){
+    try{
+      if(MODO_OPACO){ await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(p)}); }
+      else{ const r=await fetch(API_URL,{method:'POST',body:JSON.stringify(p)});const j=await r.json();
+        if(j.status!=='ok'&&j.status!=='duplicado')throw new Error('rechazado'); }
+    }catch(e){ restantes.push(p); }
+  }
+  localStorage.setItem(LSKEY_COLA,JSON.stringify(restantes));
+  const z=$('#zona-envio');
+  if(!restantes.length){ limpiarDraft(); if(z)z.innerHTML=`<div class="ok-envio">✅ Todas las fichas pendientes se enviaron.</div><button class="btn btn-p" style="width:100%" onclick="finalizar()">Terminar</button>`; }
+  else if(z){ const e=z.querySelector('.err-envio'); if(e)e.textContent='📶 Aún sin señal ('+restantes.length+' pendiente/s).'; }
+}
+function descargarRespaldo(){
+  const p=armarPayload();
+  const blob=new Blob([JSON.stringify(p,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='F360_'+p.fase+'_'+p.codigo+'.json';a.click();
+}
+function finalizar(){ limpiarDraft(); irInicio(); }
+
+/* ---------------- Configuración ---------------- */
+function irConfig(){
+  nav.style.display='none';$('#fab').style.display='none';
+  window._paso=null;
+  const cola=JSON.parse(localStorage.getItem(LSKEY_COLA)||'[]');
+  main.innerHTML=`<div class="pantalla">
+    <h2>⚙️ Configuración</h2>
+    <p class="ayuda">Solo el equipo técnico necesita esta pantalla.</p>
+    <label class="lbl">URL del Apps Script (base de datos en Drive)</label>
+    <input type="text" id="cfg-url" value="${esc(API_URL)}" placeholder="https://script.google.com/macros/s/…/exec">
+    <button class="btn btn-p" style="width:100%;margin-top:14px" onclick="probarConexion()">🔌 Probar y guardar</button>
+    <div id="cfg-msj"></div>
+    ${cola.length?`<div class="alerta">📥 Hay ${cola.length} ficha(s) pendientes de envío en este dispositivo.<br><button class="btn btn-p" style="width:100%;margin-top:8px" onclick="reintentarColaCfg()">🔄 Enviar ahora</button></div>`:''}
+    <button class="btn btn-s" style="width:100%;margin-top:16px" onclick="irInicio()">← Volver al inicio</button>
+    <p class="mini">Consultoría IFFI–IPEE (UNIFRANZ) · Instrumento v${VERSION_INSTRUMENTO}</p>
+  </div>`;
+}
+async function probarConexion(){
+  const url=$('#cfg-url').value.trim(), m=$('#cfg-msj');
+  if(!url){API_URL='';localStorage.removeItem(LSKEY_URL);localStorage.removeItem(LSKEY_OPACO);MODO_OPACO=false;
+    m.innerHTML='<div class="alerta">Modo prueba activado (sin base de datos).</div>';return;}
+  m.innerHTML='<div class="alerta">Probando conexión…</div>';
+  try{
+    const r=await fetch(url+'?action=ping');const j=await r.json();
+    if(j.status==='ok'){API_URL=url;localStorage.setItem(LSKEY_URL,url);
+      localStorage.removeItem(LSKEY_OPACO);MODO_OPACO=false;
+      m.innerHTML='<div class="ok-envio">✅ Conexión exitosa.</div>';}
+    else throw new Error('respuesta inesperada');
+  }catch(e){
+    try{
+      await fetch(url+'?action=ping',{mode:'no-cors'});
+      API_URL=url;localStorage.setItem(LSKEY_URL,url);localStorage.setItem(LSKEY_OPACO,'1');MODO_OPACO=true;
+      m.innerHTML='<div class="alerta">🟡 <b>Conexión en modo limitado.</b> Las fichas se enviarán, pero sin confirmación ni carga del padrón real.</div>';
+    }catch(e2){
+      m.innerHTML='<div class="err-envio">❌ No se pudo conectar. Verificar la URL (debe terminar en /exec) y que el script esté publicado para «Cualquier persona».</div>';
+    }
+  }
+}
+async function reintentarColaCfg(){ await reintentarCola(); irConfig(); }
+
+irInicio();
+</script>
+</body>
+</html>
