@@ -289,8 +289,8 @@ label.lbl{display:block;font-size:12.5px;font-weight:800;margin:14px 0 7px;color
    · Redacción adaptada a emprendedoras (contexto Cochabamba, Bolivia)
    ========================================================================== */
 
-const LSKEY_URL='f360_url', LSKEY_DRAFT='f360_draft3', LSKEY_COLA='f360_cola3', LSKEY_OPACO='f360_opaco';
-let MODO_OPACO=localStorage.getItem(LSKEY_OPACO)==='1';
+const LSKEY_URL='f360_url', LSKEY_DRAFT='f360_draft3', LSKEY_COLA='f360_cola3';
+try{ localStorage.removeItem('f360_opaco'); }catch(e){}
 const API_URL_DEFECTO='https://script.google.com/macros/s/AKfycbwdwg12DmPtimfGHSa0CHKay7MhtOrzQnDYxpNYpaipH8-l3TJ8-33fxiaZ2lfeeLaq/exec';
 let API_URL=localStorage.getItem(LSKEY_URL)||API_URL_DEFECTO;
 const VERSION_INSTRUMENTO='1.1';
@@ -581,12 +581,37 @@ function limpiarDraft(){ localStorage.removeItem(LSKEY_DRAFT); }
 window.setCampo=function(k,v){ R[k]=(v===''?null:v); actualizarSig(); guardarDraft(); };
 function nombreAplica(){ return ((sel.apellidos||'')+' '+(sel.nombres||'')).trim(); }
 
-/* ---------------- Datos remotos ---------------- */
+/* ---------------- Datos remotos ----------------
+   Las lecturas usan JSONP (etiqueta <script>) en lugar de fetch: asi funcionan
+   en cualquier navegador, incluido el interno de WhatsApp, que bloquea la
+   lectura de respuestas de otros dominios. */
+function jsonp(consulta, segundos){
+  return new Promise(function(resolver, rechazar){
+    if(!API_URL) return rechazar(new Error('sin URL'));
+    const nombre='f360cb'+Math.random().toString(36).slice(2,10);
+    const et=document.createElement('script');
+    let listo=false;
+    const tiempo=setTimeout(function(){ if(!listo){ limpiar(); rechazar(new Error('tiempo agotado')); } },(segundos||20)*1000);
+    function limpiar(){
+      listo=true; clearTimeout(tiempo);
+      try{ delete window[nombre]; }catch(e){ window[nombre]=undefined; }
+      if(et.parentNode) et.parentNode.removeChild(et);
+    }
+    window[nombre]=function(datos){ limpiar(); resolver(datos); };
+    et.onerror=function(){ if(!listo){ limpiar(); rechazar(new Error('sin conexion')); } };
+    et.src=API_URL+(API_URL.indexOf('?')>=0?'&':'?')+consulta+'&callback='+nombre+'&t='+Date.now();
+    document.head.appendChild(et);
+  });
+}
+function navegadorInterno(){
+  const u=(navigator.userAgent||'').toLowerCase();
+  return /(fban|fbav|instagram|line\/|micromessenger)/.test(u) ||
+         (/(wv)/.test(u) && /android/.test(u));
+}
 async function cargarRoster(){
   if(!API_URL){ROSTER=ROSTER_DEMO;return 'demo';}
   try{
-    const r=await fetch(API_URL+'?action=roster');
-    const j=await r.json();
+    const j=await jsonp('action=roster');
     if(Array.isArray(j)&&j.length){ROSTER=j;return 'ok';}
     ROSTER=ROSTER_DEMO;return 'vacio';
   }catch(e){ROSTER=ROSTER_DEMO;return 'error';}
@@ -594,10 +619,16 @@ async function cargarRoster(){
 async function cargarExAnte(){
   if(!API_URL)return;
   try{
-    const r=await fetch(API_URL+'?action=exante');
-    const j=await r.json();
+    const j=await jsonp('action=exante');
     if(Array.isArray(j))j.forEach(x=>{EXANTE_PREVIO[x.codigo]=x;});
   }catch(e){}
+}
+/* Pregunta a la base si la ficha quedo guardada */
+async function verificarGuardada(codigo,fase){
+  try{
+    const j=await jsonp('action=verificar&codigo='+encodeURIComponent(codigo)+'&fase='+fase, 25);
+    return !!(j&&j.guardada);
+  }catch(e){ return null; }
 }
 function exAntePrevio(){ return EXANTE_PREVIO[sel.emp&&sel.emp.codigo]||null; }
 function puntajeExAnte(itemId){
@@ -819,8 +850,22 @@ function irInicio(){
     ${draft?`<button class="opt" onclick="retomarDraft()"><span class="tit">🔄 Continuar donde quedó</span><span class="desc">Hay una ficha sin terminar guardada en este dispositivo</span></button>`:''}
     <button class="opt fase-btn" onclick="elegirFase('exante')"><span class="ic">🌱</span><span class="tx"><b>Ficha inicial (ex ante)</b><span>Antes de los talleres: cómo está hoy el negocio</span></span></button>
     <button class="opt fase-btn" onclick="elegirFase('expost')"><span class="ic">🌳</span><span class="tx"><b>Ficha final (post)</b><span>Al cierre: qué cambió durante el acompañamiento</span></span></button>
-    <p class="mini">Versión ${VERSION_INSTRUMENTO} · ${API_URL?'✅ Conectado a la base de datos':'⚠️ Modo prueba sin base de datos'}</p>
+    <p class="mini" id="estado-con">Versión ${VERSION_INSTRUMENTO} · comprobando conexión…</p>
   </div>`;
+  comprobarConexionInicio();
+}
+async function comprobarConexionInicio(){
+  const el=document.getElementById('estado-con');
+  if(!el)return;
+  if(!API_URL){ el.innerHTML='Versión '+VERSION_INSTRUMENTO+' · ⚠️ Modo prueba sin base de datos'; return; }
+  try{
+    const j=await jsonp('action=ping',15);
+    if(j&&j.status==='ok'){ el.innerHTML='Versión '+VERSION_INSTRUMENTO+' · ✅ Conectado a la base de datos'; return; }
+    throw new Error('respuesta inesperada');
+  }catch(e){
+    el.innerHTML='Versión '+VERSION_INSTRUMENTO+' · ⚠️ Sin conexión con la base. Revise su internet.'+
+      (navegadorInterno()?'<br>Si abrió el enlace desde WhatsApp, ábralo en Chrome.':'');
+  }
 }
 function retomarDraft(){
   try{
@@ -1212,33 +1257,50 @@ async function enviar(){
     return;
   }
   z.innerHTML='<div class="ok-envio" style="background:var(--lila);color:var(--prim-osc)"><span class="spinner" style="border-top-color:var(--prim);border-color:rgba(167,139,250,.35)"></span> Enviando…</div>';
-  if(MODO_OPACO){
-    try{
-      await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(payload)});
-      limpiarDraft();
-      z.innerHTML=`<div class="ok-envio">📤 Ficha enviada.<br><span style="font-weight:500;font-size:12px">(Modo limitado: verificar que apareció en la hoja de cálculo.)</span></div>
-      <button class="btn btn-s" style="width:100%" onclick="descargarRespaldo()">⬇️ Descargar respaldo</button>
-      <button class="btn btn-p" style="width:100%;margin-top:10px" onclick="finalizar()">Terminar</button>`;
-    }catch(e){ colaFallo(z,payload); }
-    return;
-  }
+
+  /* 1) Envio normal: da respuesta inmediata cuando el navegador lo permite */
   try{
     const r=await fetch(API_URL,{method:'POST',body:JSON.stringify(payload)});
     const j=await r.json();
-    if(j.status==='ok'){
-      limpiarDraft();
-      z.innerHTML=`<div class="ok-envio">✅ Ficha guardada en la base de datos.</div>
-      <button class="btn btn-p" style="width:100%" onclick="finalizar()">Terminar</button>`;
-    }else if(j.status==='duplicado'){
-      z.innerHTML=`<div class="err-envio">⚠️ Este emprendimiento ya tiene una ficha ${fase==='exante'?'inicial':'final'} registrada. No se guardó de nuevo.</div>
-      <button class="btn btn-s" style="width:100%" onclick="descargarRespaldo()">⬇️ Descargar respaldo</button>
-      <button class="btn btn-p" style="width:100%;margin-top:10px" onclick="finalizar()">Terminar</button>`;
-    }else throw new Error(j.mensaje||'error');
-  }catch(e){ colaFallo(z,payload); }
+    if(j.status==='ok'){ exitoEnvio(z); return; }
+    if(j.status==='duplicado'){ duplicadoEnvio(z); return; }
+    throw new Error(j.mensaje||'error');
+  }catch(e){ /* sigue al plan B */ }
+
+  /* 2) Plan B: se envia sin leer la respuesta y luego se confirma con la base */
+  z.innerHTML='<div class="ok-envio" style="background:var(--lila);color:var(--prim-osc)"><span class="spinner" style="border-top-color:var(--prim);border-color:rgba(167,139,250,.35)"></span> Enviando y confirmando…</div>';
+  try{
+    await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(payload)});
+  }catch(e){ colaFallo(z,payload); return; }
+
+  await new Promise(r=>setTimeout(r,2500));
+  let guardada=await verificarGuardada(payload.codigo,payload.fase);
+  if(guardada===false){ await new Promise(r=>setTimeout(r,3500)); guardada=await verificarGuardada(payload.codigo,payload.fase); }
+
+  if(guardada===true){ exitoEnvio(z); }
+  else if(guardada===false){ colaFallo(z,payload,'La base no registró la ficha.'); }
+  else {
+    guardarCola(payload);
+    z.innerHTML=`<div class="alerta">📤 La ficha se envió, pero no se pudo confirmar por falta de señal.<br>
+    Quedó guardada en este dispositivo por seguridad: entra a ⚙️ más tarde y presiona <b>Enviar ahora</b>.</div>
+    <button class="btn btn-p" style="width:100%" onclick="reintentarCola()">🔄 Reintentar</button>
+    <button class="btn btn-s" style="width:100%;margin-top:10px" onclick="descargarRespaldo()">⬇️ Descargar respaldo</button>
+    <button class="btn btn-s" style="width:100%;margin-top:10px" onclick="finalizar()">Terminar</button>`;
+  }
 }
-function colaFallo(z,payload){
+function exitoEnvio(z){
+  limpiarDraft();
+  z.innerHTML=`<div class="ok-envio">✅ Ficha guardada en la base de datos.</div>
+  <button class="btn btn-p" style="width:100%" onclick="finalizar()">Terminar</button>`;
+}
+function duplicadoEnvio(z){
+  z.innerHTML=`<div class="err-envio">⚠️ Este emprendimiento ya tiene una ficha ${fase==='exante'?'inicial':'final'} registrada. No se guardó de nuevo.</div>
+  <button class="btn btn-s" style="width:100%" onclick="descargarRespaldo()">⬇️ Descargar respaldo</button>
+  <button class="btn btn-p" style="width:100%;margin-top:10px" onclick="finalizar()">Terminar</button>`;
+}
+function colaFallo(z,payload,motivo){
   guardarCola(payload);
-  z.innerHTML=`<div class="err-envio">📶 Sin señal. La ficha quedó guardada en este celular.</div>
+  z.innerHTML=`<div class="err-envio">📶 No se pudo guardar${motivo?': '+motivo:''}. La ficha quedó en este dispositivo.</div>
   <button class="btn btn-p" style="width:100%" onclick="reintentarCola()">🔄 Reintentar envío</button>
   <button class="btn btn-s" style="width:100%;margin-top:10px" onclick="descargarRespaldo()">⬇️ Descargar respaldo</button>
   <button class="btn btn-s" style="width:100%;margin-top:10px" onclick="finalizar()">Terminar por ahora</button>`;
@@ -1252,11 +1314,19 @@ async function reintentarCola(){
   if(!cola.length){finalizar();return;}
   let restantes=[];
   for(const p of cola){
+    let ok=false;
     try{
-      if(MODO_OPACO){ await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(p)}); }
-      else{ const r=await fetch(API_URL,{method:'POST',body:JSON.stringify(p)});const j=await r.json();
-        if(j.status!=='ok'&&j.status!=='duplicado')throw new Error('rechazado'); }
-    }catch(e){ restantes.push(p); }
+      const r=await fetch(API_URL,{method:'POST',body:JSON.stringify(p)});
+      const j=await r.json();
+      ok=(j.status==='ok'||j.status==='duplicado');
+    }catch(e){
+      try{
+        await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(p)});
+        await new Promise(r=>setTimeout(r,2500));
+        ok=(await verificarGuardada(p.codigo,p.fase))===true;
+      }catch(e2){ ok=false; }
+    }
+    if(!ok) restantes.push(p);
   }
   localStorage.setItem(LSKEY_COLA,JSON.stringify(restantes));
   const z=$('#zona-envio');
@@ -1290,23 +1360,19 @@ function irConfig(){
 }
 async function probarConexion(){
   const url=$('#cfg-url').value.trim(), m=$('#cfg-msj');
-  if(!url){API_URL='';localStorage.removeItem(LSKEY_URL);localStorage.removeItem(LSKEY_OPACO);MODO_OPACO=false;
+  if(!url){API_URL='';localStorage.removeItem(LSKEY_URL);
     m.innerHTML='<div class="alerta">Modo prueba activado (sin base de datos).</div>';return;}
   m.innerHTML='<div class="alerta">Probando conexión…</div>';
+  const anterior=API_URL; API_URL=url;
   try{
-    const r=await fetch(url+'?action=ping');const j=await r.json();
-    if(j.status==='ok'){API_URL=url;localStorage.setItem(LSKEY_URL,url);
-      localStorage.removeItem(LSKEY_OPACO);MODO_OPACO=false;
-      m.innerHTML='<div class="ok-envio">✅ Conexión exitosa.</div>';}
-    else throw new Error('respuesta inesperada');
+    const j=await jsonp('action=ping',15);
+    if(j&&j.status==='ok'){
+      localStorage.setItem(LSKEY_URL,url);
+      m.innerHTML='<div class="ok-envio">✅ Conexión exitosa. La app puede leer y escribir en la base.</div>';
+    } else throw new Error('respuesta inesperada');
   }catch(e){
-    try{
-      await fetch(url+'?action=ping',{mode:'no-cors'});
-      API_URL=url;localStorage.setItem(LSKEY_URL,url);localStorage.setItem(LSKEY_OPACO,'1');MODO_OPACO=true;
-      m.innerHTML='<div class="alerta">🟡 <b>Conexión en modo limitado.</b> Las fichas se enviarán, pero sin confirmación ni carga del padrón real.</div>';
-    }catch(e2){
-      m.innerHTML='<div class="err-envio">❌ No se pudo conectar. Verificar la URL (debe terminar en /exec) y que el script esté publicado para «Cualquier persona».</div>';
-    }
+    API_URL=anterior;
+    m.innerHTML='<div class="err-envio">❌ No se pudo conectar. Verifique la URL (debe terminar en /exec), que el script esté publicado para «Cualquier persona» y que haya internet.</div>';
   }
 }
 async function reintentarColaCfg(){ await reintentarCola(); irConfig(); }
