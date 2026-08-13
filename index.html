@@ -854,18 +854,34 @@ function irInicio(){
   </div>`;
   comprobarConexionInicio();
 }
+function idImplementacion(){
+  const m=/\/macros\/s\/([^/]+)\//.exec(API_URL||'');
+  if(!m) return '(sin URL)';
+  const id=m[1];
+  return id.slice(0,6)+'…'+id.slice(-8);
+}
+function origenURL(){
+  return localStorage.getItem(LSKEY_URL)?'guardada en este equipo':'la del archivo';
+}
 async function comprobarConexionInicio(){
   const el=document.getElementById('estado-con');
   if(!el)return;
   if(!API_URL){ el.innerHTML='Versión '+VERSION_INSTRUMENTO+' · ⚠️ Modo prueba sin base de datos'; return; }
+  const pie='<br><span style="opacity:.7">Base: '+idImplementacion()+' ('+origenURL()+')</span>';
   try{
     const j=await jsonp('action=ping',15);
-    if(j&&j.status==='ok'){ el.innerHTML='Versión '+VERSION_INSTRUMENTO+' · ✅ Conectado a la base de datos'; return; }
+    if(j&&j.status==='ok'){ el.innerHTML='Versión '+VERSION_INSTRUMENTO+' · ✅ Conectado a la base de datos'+pie; return; }
     throw new Error('respuesta inesperada');
   }catch(e){
-    el.innerHTML='Versión '+VERSION_INSTRUMENTO+' · ⚠️ Sin conexión con la base. Revise su internet.'+
-      (navegadorInterno()?'<br>Si abrió el enlace desde WhatsApp, ábralo en Chrome.':'');
+    el.innerHTML='Versión '+VERSION_INSTRUMENTO+' · ⚠️ Sin conexión con la base'+pie+
+      '<br><button class="btn btn-s" style="width:100%;margin-top:10px;padding:11px" onclick="olvidarURL()">🧹 Usar la dirección del archivo</button>';
   }
+}
+/* Borra la URL guardada en el equipo para volver a la del archivo */
+function olvidarURL(){
+  localStorage.removeItem(LSKEY_URL);
+  API_URL=API_URL_DEFECTO;
+  irInicio();
 }
 function retomarDraft(){
   try{
