@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Ficha 360° — Emprender para crecer y fortalecer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -294,6 +297,9 @@ try{ localStorage.removeItem('f360_opaco'); }catch(e){}
 const API_URL_DEFECTO='https://script.google.com/macros/s/AKfycbwwS29V2qNnsIACDWuRJUvcEfVoOHhkK0vHyl9Y4zoLFoEBAX99R7UJYkODhxjSmdeZ/exec';
 let API_URL=localStorage.getItem(LSKEY_URL)||API_URL_DEFECTO;
 const VERSION_INSTRUMENTO='1.1';
+/* Version de este archivo. Debe coincidir con VERSION_APP del script.
+   Si el script anuncia otra, la app se recarga sola sin usar la copia guardada. */
+const VERSION_ARCHIVO='1.3';
 
 const ROSTER_DEMO=[
  {codigo:'ART-001',apellidos:'Mamani Flores',nombres:'Julia',emprendimiento:'Tejidos Arcoíris',municipio:'Quillacollo',rubro:'Artesanías'},
@@ -608,13 +614,18 @@ function navegadorInterno(){
   return /(fban|fbav|instagram|line\/|micromessenger)/.test(u) ||
          (/(wv)/.test(u) && /android/.test(u));
 }
+/* El padrón de ejemplo SOLO se usa cuando no hay ninguna base configurada.
+   Si hay base, se muestra lo que ella diga: si está vacía, la lista sale
+   vacía y la mentora tiene que registrar el emprendimiento. Nunca se
+   inventan emprendimientos, porque el código es lo que une la ficha
+   inicial con la final. */
 async function cargarRoster(){
   if(!API_URL){ROSTER=ROSTER_DEMO;return 'demo';}
   try{
     const j=await jsonp('action=roster');
     if(Array.isArray(j)&&j.length){ROSTER=j;return 'ok';}
-    ROSTER=ROSTER_DEMO;return 'vacio';
-  }catch(e){ROSTER=ROSTER_DEMO;return 'error';}
+    ROSTER=[];return 'vacio';
+  }catch(e){ROSTER=[];return 'error';}
 }
 async function cargarExAnte(){
   if(!API_URL)return;
@@ -670,9 +681,14 @@ const AYUDA={
  aplica:{titulo:'Mentora asignada',bloques:[
   {t:'Qué registrar',p:'Los apellidos y nombres completos de la mentora asignada al emprendimiento, tal como figuran en su documento de identidad.'},
   {t:'Ejemplo',ejemplo:true,p:'Apellidos: Rojas Terceros · Nombres: Ana Belén'}]},
+ nuevo:{titulo:'Registrar un emprendimiento nuevo',bloques:[
+  {t:'Cuándo se usa',p:'Solo la primera vez que se entrevista a esa emprendedora. Después ya aparece en la lista y no hay que escribir nada.'},
+  {t:'Antes de registrar',p:'Busque bien en la lista: puede estar escrita de otra forma. Si registra dos veces al mismo emprendimiento, sus dos fichas no se van a poder comparar.'},
+  {t:'Qué pasa al registrar',p:'La base le asigna un código automáticamente y continúa con la ficha. Si el nombre se parece a uno que ya existe, la app le avisa antes de crearlo.'},
+  {t:'Ejemplo',ejemplo:true,p:'Emprendimiento: Tejidos Arcoíris · Apellidos: Mamani Flores · Nombres: Julia · Municipio: Quillacollo · Rubro: Artesanías'}]},
  elegir:{titulo:'Elegir el emprendimiento',bloques:[
   {t:'Qué hacer',p:'Buscar por el nombre del emprendimiento, de la emprendedora o por el código. Al tocarlo, el código queda registrado automáticamente: no hay que escribirlo.'},
-  {t:'Cuidado',p:'Verificar que sea el emprendimiento correcto antes de continuar. Si no aparece en la lista, avisar al equipo técnico.'}]},
+  {t:'Si no aparece',p:'Buscar primero por otra palabra (parte del nombre, apellido de la emprendedora). Si de verdad no está, usar el botón verde «Registrar nuevo emprendimiento».'}]},
  ident:{titulo:'Datos del emprendimiento',bloques:[
   {t:'Nombre de la emprendedora',p:'Aparece cargado desde el padrón. Confirmarlo con ella y corregirlo si está mal escrito, incompleto o si usa otro nombre. Debe coincidir con su documento de identidad.'},
   {t:'Dirección y teléfono',p:'Sirven para poder visitarla y hacerle seguimiento. Anotar una referencia clara, no solo la calle.'},
@@ -870,13 +886,33 @@ async function comprobarConexionInicio(){
   const pie='<br><span style="opacity:.7">Base: '+idImplementacion()+' ('+origenURL()+')</span>';
   try{
     const j=await jsonp('action=ping',15);
-    if(j&&j.status==='ok'){ el.innerHTML='Versión '+VERSION_INSTRUMENTO+' · ✅ Conectado a la base de datos'+pie; return; }
+    if(j&&j.status==='ok'){
+      if(j.version_app && j.version_app!==VERSION_ARCHIVO && actualizar(j.version_app)) return;
+      el.innerHTML='Versión '+VERSION_INSTRUMENTO+' · ✅ Conectado a la base de datos'+pie;
+      return;
+    }
     throw new Error('respuesta inesperada');
   }catch(e){
     el.innerHTML='Versión '+VERSION_INSTRUMENTO+' · ⚠️ Sin conexión con la base'+pie+
       '<br><button class="btn btn-s" style="width:100%;margin-top:10px;padding:11px" onclick="olvidarURL()">🧹 Usar la dirección del archivo</button>';
   }
 }
+/* Si el script anuncia una version mas nueva, se recarga la pagina pidiendo el
+   archivo actualizado. La marca en sessionStorage evita recargas en bucle si el
+   archivo publicado todavia no cambio. */
+function actualizar(versionNueva){
+  try{
+    const marca='f360_act_'+versionNueva;
+    if(sessionStorage.getItem(marca)) return false;
+    sessionStorage.setItem(marca,'1');
+  }catch(e){ return false; }
+  const el=document.getElementById('estado-con');
+  if(el) el.innerHTML='⬇️ Actualizando la aplicación…';
+  const base=location.href.split('?')[0].split('#')[0];
+  location.replace(base+'?v='+encodeURIComponent(versionNueva)+'&t='+Date.now());
+  return true;
+}
+
 /* Borra la URL guardada en el equipo para volver a la del archivo */
 function olvidarURL(){
   localStorage.removeItem(LSKEY_URL);
@@ -907,7 +943,8 @@ function pantallaAplica(){
     <div class="paso-num">Paso 1 de 2</div>
     <h2>Mentora asignada</h2>
     <p class="ayuda">Escriba sus apellidos y nombres completos.</p>
-    ${window._estadoRoster==='error'?'<div class="alerta">⚠️ No se pudo conectar a la base. Se muestra el padrón de ejemplo.</div>':''}
+    ${window._estadoRoster==='error'?'<div class="alerta">⚠️ No se pudo conectar a la base. No se puede cargar ni registrar emprendimientos hasta que haya conexión.</div>':''}
+    ${window._estadoRoster==='demo'?'<div class="alerta">⚠️ Modo prueba sin base de datos: los emprendimientos que se ven son de ejemplo.</div>':''}
     <div class="campo"><label>Apellidos</label>
       <input type="text" data-k="ap" value="${esc(sel.apellidos||'')}" placeholder="Ej.: Rojas Terceros" oninput="sel.apellidos=this.value;valAplica()"></div>
     <div class="campo"><label>Nombres</label>
@@ -931,11 +968,28 @@ function pantallaElegir(filtro){
     if(!q)return true;
     return ((e.emprendimiento||'')+' '+(e.nombres||'')+' '+(e.apellidos||'')+' '+(e.codigo||'')+' '+(e.municipio||'')).toLowerCase().includes(q);
   });
-  main.innerHTML=`<div class="pantalla">
-    <div class="paso-num">Paso 2 de 2</div>
-    <h2>¿Con qué emprendimiento?</h2>
-    <p class="ayuda">Mentora: <b>${esc(nombreAplica())}</b> · ${fase==='exante'?'Ficha inicial':'Ficha final'}</p>
-    <div class="buscador"><input type="text" id="q" value="${esc(q)}" placeholder="Buscar por nombre, emprendedora o código" oninput="pantallaElegir(this.value)"></div>
+  const padronVacio=(ROSTER.length===0);
+  const sinConexion=(window._estadoRoster==='error');
+  /* En la ficha final el emprendimiento ya debería existir: registrarlo de
+     nuevo le daría otro código y sus dos fichas no se podrían comparar. */
+  const avisoPost=(fase==='expost')
+    ? '<div class="alerta">⚠️ En la ficha final el emprendimiento ya debería estar en la lista, porque se registró en la ficha inicial. Si no aparece, búsquelo por el apellido o por el código antes de registrarlo: registrarlo otra vez le daría un código nuevo y las dos fichas no se podrían comparar.</div>'
+    : '';
+  const botonNuevo=`${avisoPost}<button class="opt" onclick="pantallaNuevo()" style="border-color:rgba(52,211,153,.45);background:rgba(52,211,153,.10)">
+      <span class="tit">➕ Registrar nuevo emprendimiento</span>
+      <span class="desc">Se registra una sola vez. La base le asigna su código.</span></button>`;
+
+  /* Sin conexión no se puede ni buscar ni registrar: el código lo asigna
+     la base, nunca el celular. */
+  let cuerpo;
+  if(sinConexion){
+    cuerpo=`<div class="alerta">⚠️ Sin conexión con la base de datos. No se puede elegir ni registrar un emprendimiento hasta que vuelva el internet.</div>
+      <button class="btn btn-p" style="width:100%;margin-top:8px" onclick="elegirFase('${fase}')">🔄 Reintentar</button>`;
+  } else if(padronVacio){
+    cuerpo=`<div class="nota">Todavía no hay ningún emprendimiento en el padrón. El primero se registra aquí: al hacerlo queda guardado para siempre y la próxima vez ya va a aparecer en la lista.</div>
+      ${botonNuevo}`;
+  } else {
+    cuerpo=`<div class="buscador"><input type="text" id="q" value="${esc(q)}" placeholder="Buscar por nombre, emprendedora o código" oninput="pantallaElegir(this.value)"></div>
     <div class="contador">${lista.length} de ${ROSTER.length}</div>
     ${lista.length?lista.map(e=>{
       const j=ROSTER.indexOf(e);
@@ -943,7 +997,16 @@ function pantallaElegir(filtro){
       <span class="codigo-tag">${esc(e.codigo)}</span><br>
       <span class="tit" style="margin-top:5px">${esc(e.emprendimiento||'(sin nombre)')}</span>
       <span class="desc">${esc((e.nombres||'')+' '+(e.apellidos||''))} · ${esc(e.municipio||'')} · ${esc(e.rubro||'')}</span>
-    </button>`;}).join(''):'<div class="alerta">No se encontró ningún emprendimiento con esa búsqueda.</div>'}
+    </button>`;}).join(''):'<div class="alerta">No se encontró ningún emprendimiento con esa búsqueda. Pruebe con otra palabra antes de registrarlo como nuevo.</div>'}
+    <p class="mini" style="margin:14px 0 6px">Busque bien antes de registrar: si un mismo emprendimiento se registra dos veces, sus dos fichas no se van a poder comparar.</p>
+    ${botonNuevo}`;
+  }
+
+  main.innerHTML=`<div class="pantalla">
+    <div class="paso-num">Paso 2 de 2</div>
+    <h2>¿Con qué emprendimiento?</h2>
+    <p class="ayuda">Mentora: <b>${esc(nombreAplica())}</b> · ${fase==='exante'?'Ficha inicial':'Ficha final'}</p>
+    ${cuerpo}
     <button class="opt" onclick="pantallaAplica()" style="color:var(--gris)">← Cambiar de mentora</button>
   </div>`;
   if(filtro!==undefined){ const el=document.getElementById('q');
@@ -953,6 +1016,76 @@ function elegirEmp(i){
   sel.emp=ROSTER[i];R={};
   construirPasos();idx=0;
   render();
+}
+
+/* ---------- Registrar un emprendimiento nuevo ----------
+   Los datos se guardan en el padrón y el código lo asigna la base,
+   nunca el celular. Así dos mentoras no pueden generar el mismo. */
+let NUEVO={};
+function pantallaNuevo(aviso){
+  window._paso={tipo:'nuevo'};
+  nav.style.display='none';$('#fab').style.display='flex';
+  main.innerHTML=`<div class="pantalla">
+    <div class="paso-num">Nuevo emprendimiento</div>
+    <h2>Registrar por primera vez</h2>
+    <p class="ayuda">Estos datos se escriben una sola vez. En la ficha final ya va a aparecer en la lista.</p>
+    ${aviso||''}
+    <div class="campo"><label>Nombre del emprendimiento</label>
+      <input type="text" data-k="n_emp" value="${esc(NUEVO.emprendimiento||'')}" placeholder="Ej.: Tejidos Arcoíris" oninput="NUEVO.emprendimiento=this.value;valNuevo()"></div>
+    <div class="campo"><label>Apellidos de la emprendedora</label>
+      <input type="text" data-k="n_ape" value="${esc(NUEVO.apellidos||'')}" placeholder="Ej.: Mamani Flores" oninput="NUEVO.apellidos=this.value;valNuevo()"></div>
+    <div class="campo"><label>Nombres de la emprendedora</label>
+      <input type="text" data-k="n_nom" value="${esc(NUEVO.nombres||'')}" placeholder="Ej.: Julia" oninput="NUEVO.nombres=this.value;valNuevo()"></div>
+    <div class="campo"><label>Municipio</label><div class="pills">
+      ${['Cochabamba','Colcapirhua','Quillacollo','Otro'].map(m=>`<button class="pill ${NUEVO.municipio===m?'sel':''}" onclick="NUEVO.municipio='${m}';pantallaNuevo()">${m}</button>`).join('')}
+    </div></div>
+    <div class="campo"><label>Rubro</label><div class="pills">
+      ${['Artesanías','Alimentos','Textiles'].map(r=>`<button class="pill ${NUEVO.rubro===r?'sel':''}" onclick="NUEVO.rubro='${r}';pantallaNuevo()">${r}</button>`).join('')}
+    </div></div>
+    <div id="msj-nuevo"></div>
+    <button class="btn btn-g" id="btn-nuevo" style="width:100%;margin-top:8px" onclick="guardarNuevo(0)">Registrar y continuar</button>
+    <button class="btn btn-s" style="width:100%;margin-top:10px" onclick="pantallaElegir('')">← Volver a la lista</button>
+  </div>`;
+  valNuevo();
+}
+function valNuevo(){
+  const b=document.getElementById('btn-nuevo');
+  if(b) b.disabled=!((NUEVO.emprendimiento||'').trim().length>2 && (NUEVO.apellidos||'').trim().length>2 && NUEVO.rubro);
+}
+async function guardarNuevo(forzar){
+  const m=$('#msj-nuevo'), b=document.getElementById('btn-nuevo');
+  if(b) b.disabled=true;
+  m.innerHTML='<div class="alerta"><span class="spinner" style="border-top-color:var(--amarillo);border-color:rgba(251,191,36,.35)"></span> Registrando…</div>';
+  const q='action=nuevo'+
+    '&emprendimiento='+encodeURIComponent(NUEVO.emprendimiento||'')+
+    '&apellidos='+encodeURIComponent(NUEVO.apellidos||'')+
+    '&nombres='+encodeURIComponent(NUEVO.nombres||'')+
+    '&municipio='+encodeURIComponent(NUEVO.municipio||'')+
+    '&rubro='+encodeURIComponent(NUEVO.rubro||'')+
+    (forzar?'&forzar=1':'');
+  let j=null;
+  try{ j=await jsonp(q,25); }catch(e){
+    m.innerHTML='<div class="err-envio">📶 Sin conexión. No se pudo registrar. Inténtelo cuando tenga señal.</div>';
+    valNuevo(); return;
+  }
+  if(j&&(j.status==='ok'||j.status==='existe')){
+    const e={codigo:j.codigo,apellidos:j.apellidos,nombres:j.nombres,
+             emprendimiento:j.emprendimiento,municipio:j.municipio,rubro:j.rubro};
+    if(!ROSTER.some(x=>x.codigo===e.codigo)) ROSTER.push(e);
+    NUEVO={};
+    sel.emp=e; R={};
+    construirPasos(); idx=0; render();
+    return;
+  }
+  if(j&&j.status==='similar'){
+    m.innerHTML=`<div class="alerta">⚠️ Ya existe algo parecido en el padrón:<br>
+      ${j.parecidos.map(x=>'• '+esc(x)).join('<br>')}<br><br>
+      Si es la misma emprendedora, vuelva a la lista y búsquela. Si de verdad es otra, registre de todos modos.</div>
+      <button class="btn btn-p" style="width:100%;margin-top:8px" onclick="guardarNuevo(1)">Sí, es otra: registrar igual</button>`;
+    return;
+  }
+  m.innerHTML='<div class="err-envio">❌ '+esc((j&&j.mensaje)||'No se pudo registrar.')+'</div>';
+  valNuevo();
 }
 
 /* ---------- Consentimiento ---------- */
