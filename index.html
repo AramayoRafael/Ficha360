@@ -301,12 +301,57 @@ const VERSION_INSTRUMENTO='1.1';
    Si el script anuncia otra, la app se recarga sola sin usar la copia guardada. */
 const VERSION_ARCHIVO='1.3';
 
-const ROSTER_DEMO=[
- {codigo:'ART-001',apellidos:'Mamani Flores',nombres:'Julia',emprendimiento:'Tejidos Arcoíris',municipio:'Quillacollo',rubro:'Artesanías'},
- {codigo:'ALI-002',apellidos:'Quispe Rojas',nombres:'María',emprendimiento:'Delicias del Valle',municipio:'Cochabamba',rubro:'Alimentos'},
- {codigo:'TEX-003',apellidos:'Condori Vargas',nombres:'Rosa',emprendimiento:'Confecciones Rosita',municipio:'Colcapirhua',rubro:'Textiles'}
-];
+/* Padron de respaldo. Solo entra en juego si alguien borra la direccion de la
+   base desde la pantalla de configuracion (modo prueba sin base de datos).
+   Se dejo vacio a proposito el 04/09/2026: los tres emprendimientos de ejemplo
+   se retiraron junto con las filas de prueba del Sheets. La app no debe
+   inventar emprendimientos, porque el codigo es lo que une la ficha inicial
+   con la final. */
+const ROSTER_DEMO=[];
 let ROSTER=[], EXANTE_PREVIO={};
+
+/* --------------------------------------------------------------------------
+   Renumeracion del padron — 04/09/2026
+   Se borraron del Sheets las filas de prueba de ROSTER, EXANTE y EXPOST, y los
+   cinco emprendimientos reales quedaron con codigos correlativos nuevos. Un
+   celular puede tener todavia un borrador a medias o una ficha en la cola de
+   envio con el codigo viejo; esta tabla lo reescribe UNA SOLA VEZ por
+   dispositivo para que nada llegue a la base con un codigo que ya no existe.
+   Solo reescribe si ademas coincide el nombre del emprendimiento, para no
+   tocar por error un borrador que haya quedado de las pruebas.
+   Cuando el IFFI entregue la base de 80 este bloque se puede borrar entero. */
+const MIGRACION_PADRON={
+  'ART-007':{codigo:'ART-001',emprendimiento:'Madame Natural'},
+  'ART-008':{codigo:'ART-002',emprendimiento:'Vandra Crochet'},
+  'ALI-003':{codigo:'ALI-001',emprendimiento:'MELORO VICIOSO'},
+  'ALI-004':{codigo:'ALI-002',emprendimiento:'BRUNO CHOCOLATE STUDIO'},
+  'TEX-003':{codigo:'TEX-001',emprendimiento:'LemonTree Bags'}
+};
+function migrarCodigos(){
+  const HECHO='f360_migr_20260904';
+  try{ if(localStorage.getItem(HECHO)) return; }catch(e){ return; }
+  const nuevoCodigo=(cod,emp)=>{
+    const m=MIGRACION_PADRON[cod];
+    return (m && String(emp||'').trim()===m.emprendimiento) ? m.codigo : null;
+  };
+  try{
+    const d=JSON.parse(localStorage.getItem(LSKEY_DRAFT)||'null');
+    if(d && d.sel && d.sel.emp){
+      const n=nuevoCodigo(d.sel.emp.codigo, d.sel.emp.emprendimiento);
+      if(n){ d.sel.emp.codigo=n; localStorage.setItem(LSKEY_DRAFT,JSON.stringify(d)); }
+    }
+  }catch(e){}
+  try{
+    const cola=JSON.parse(localStorage.getItem(LSKEY_COLA)||'[]');
+    let cambio=false;
+    cola.forEach(p=>{
+      const n=nuevoCodigo(p.codigo,p.emprendimiento);
+      if(n){ p.codigo=n; cambio=true; }
+    });
+    if(cambio) localStorage.setItem(LSKEY_COLA,JSON.stringify(cola));
+  }catch(e){}
+  try{ localStorage.setItem(HECHO,'1'); }catch(e){}
+}
 
 /* ---------------- Semáforo: 6 dimensiones · 28 ítems ---------------- */
 const DIMS=[
@@ -944,7 +989,7 @@ function pantallaAplica(){
     <h2>Mentora asignada</h2>
     <p class="ayuda">Escriba sus apellidos y nombres completos.</p>
     ${window._estadoRoster==='error'?'<div class="alerta">⚠️ No se pudo conectar a la base. No se puede cargar ni registrar emprendimientos hasta que haya conexión.</div>':''}
-    ${window._estadoRoster==='demo'?'<div class="alerta">⚠️ Modo prueba sin base de datos: los emprendimientos que se ven son de ejemplo.</div>':''}
+    ${window._estadoRoster==='demo'?'<div class="alerta">⚠️ Modo prueba sin base de datos: no hay padrón cargado. Configure la dirección de la base desde ⚙️ antes de aplicar una ficha.</div>':''}
     <div class="campo"><label>Apellidos</label>
       <input type="text" data-k="ap" value="${esc(sel.apellidos||'')}" placeholder="Ej.: Rojas Terceros" oninput="sel.apellidos=this.value;valAplica()"></div>
     <div class="campo"><label>Nombres</label>
@@ -1526,6 +1571,7 @@ async function probarConexion(){
 }
 async function reintentarColaCfg(){ await reintentarCola(); irConfig(); }
 
+migrarCodigos();
 irInicio();
 </script>
 </body>
