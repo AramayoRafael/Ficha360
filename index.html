@@ -642,7 +642,7 @@ function jsonp(consulta, segundos){
     const nombre='f360cb'+Math.random().toString(36).slice(2,10);
     const et=document.createElement('script');
     let listo=false;
-    const tiempo=setTimeout(function(){ if(!listo){ limpiar(); rechazar(new Error('tiempo agotado')); } },(segundos||20)*1000);
+    const tiempo=setTimeout(function(){ if(!listo){ limpiar(); rechazar(new Error('tiempo agotado')); } },(segundos||35)*1000);
     function limpiar(){
       listo=true; clearTimeout(tiempo);
       try{ delete window[nombre]; }catch(e){ window[nombre]=undefined; }
@@ -653,6 +653,22 @@ function jsonp(consulta, segundos){
     et.src=API_URL+(API_URL.indexOf('?')>=0?'&':'?')+consulta+'&callback='+nombre+'&t='+Date.now();
     document.head.appendChild(et);
   });
+}
+/* Apps Script duerme cuando pasa un rato sin uso y su primera respuesta puede
+   tardar 15 o 20 segundos; la segunda ya sale en uno. Por eso las consultas de
+   LECTURA se reintentan solas antes de dar la conexion por perdida. Las que
+   escriben (registrar) no se reintentan, para no duplicar nada. */
+async function jsonpR(consulta, segundos, intentos){
+  intentos = intentos || 2;
+  let ultimo;
+  for(let i=0; i<intentos; i++){
+    try{ return await jsonp(consulta, segundos); }
+    catch(e){
+      ultimo = e;
+      if(i < intentos-1) await new Promise(r=>setTimeout(r, 1200));
+    }
+  }
+  throw ultimo;
 }
 function navegadorInterno(){
   const u=(navigator.userAgent||'').toLowerCase();
@@ -667,7 +683,7 @@ function navegadorInterno(){
 async function cargarRoster(){
   if(!API_URL){ROSTER=ROSTER_DEMO;return 'demo';}
   try{
-    const j=await jsonp('action=roster');
+    const j=await jsonpR('action=roster',35);
     if(Array.isArray(j)&&j.length){ROSTER=j;return 'ok';}
     ROSTER=[];return 'vacio';
   }catch(e){ROSTER=[];return 'error';}
@@ -675,14 +691,14 @@ async function cargarRoster(){
 async function cargarExAnte(){
   if(!API_URL)return;
   try{
-    const j=await jsonp('action=exante');
+    const j=await jsonpR('action=exante',35);
     if(Array.isArray(j))j.forEach(x=>{EXANTE_PREVIO[x.codigo]=x;});
   }catch(e){}
 }
 /* Pregunta a la base si la ficha quedo guardada */
 async function verificarGuardada(codigo,fase){
   try{
-    const j=await jsonp('action=verificar&codigo='+encodeURIComponent(codigo)+'&fase='+fase, 25);
+    const j=await jsonpR('action=verificar&codigo='+encodeURIComponent(codigo)+'&fase='+fase, 30);
     return !!(j&&j.guardada);
   }catch(e){ return null; }
 }
@@ -930,7 +946,7 @@ async function comprobarConexionInicio(){
   if(!API_URL){ el.innerHTML='Versión '+VERSION_INSTRUMENTO+' · ⚠️ Modo prueba sin base de datos'; return; }
   const pie='<br><span style="opacity:.7">Base: '+idImplementacion()+' ('+origenURL()+')</span>';
   try{
-    const j=await jsonp('action=ping',15);
+    const j=await jsonpR('action=ping',30);
     if(j&&j.status==='ok'){
       if(j.version_app && j.version_app!==VERSION_ARCHIVO && actualizar(j.version_app)) return;
       el.innerHTML='Versión '+VERSION_INSTRUMENTO+' · ✅ Conectado a la base de datos'+pie;
@@ -938,9 +954,16 @@ async function comprobarConexionInicio(){
     }
     throw new Error('respuesta inesperada');
   }catch(e){
-    el.innerHTML='Versión '+VERSION_INSTRUMENTO+' · ⚠️ Sin conexión con la base'+pie+
-      '<br><button class="btn btn-s" style="width:100%;margin-top:10px;padding:11px" onclick="olvidarURL()">🧹 Usar la dirección del archivo</button>';
+    el.innerHTML='Versión '+VERSION_INSTRUMENTO+' · ⚠️ La base no respondió'+pie+
+      '<br><span style="opacity:.75">A veces tarda en despertar. Toque «Reintentar»; si sigue igual, revise su señal.</span>'+
+      '<br><button class="btn btn-p" style="width:100%;margin-top:10px;padding:11px" onclick="reintentarConexion()">🔄 Reintentar</button>'+
+      '<button class="btn btn-s" style="width:100%;margin-top:7px;padding:11px" onclick="olvidarURL()">🧹 Usar la dirección del archivo</button>';
   }
+}
+function reintentarConexion(){
+  const el=document.getElementById('estado-con');
+  if(el) el.innerHTML='Versión '+VERSION_INSTRUMENTO+' · ⏳ Conectando con la base…';
+  comprobarConexionInicio();
 }
 /* Si el script anuncia una version mas nueva, se recarga la pagina pidiendo el
    archivo actualizado. La marca en sessionStorage evita recargas en bucle si el
@@ -974,9 +997,17 @@ function retomarDraft(){
 }
 async function elegirFase(f){
   fase=f;
-  main.innerHTML='<div class="pantalla centrado" style="padding-top:60px"><div class="big-emoji">⏳</div><p class="ayuda">Cargando lista de emprendimientos…</p></div>';
+  main.innerHTML='<div class="pantalla centrado" style="padding-top:60px"><div class="big-emoji">⏳</div>'+
+    '<p class="ayuda" id="msj-carga">Cargando lista de emprendimientos…</p></div>';
+  /* Con el reintento, una base dormida puede tardar. Se avisa para que la
+     mentora no crea que la aplicacion se colgo. */
+  const aviso=setTimeout(function(){
+    const m=document.getElementById('msj-carga');
+    if(m) m.innerHTML='Está tardando un poco más de lo normal.<br>Seguimos intentando, no cierre la aplicación…';
+  },12000);
   const st=await cargarRoster();
   if(f==='expost')await cargarExAnte();
+  clearTimeout(aviso);
   window._estadoRoster=st;
   pantallaAplica();
 }
@@ -988,7 +1019,7 @@ function pantallaAplica(){
     <div class="paso-num">Paso 1 de 2</div>
     <h2>Mentora asignada</h2>
     <p class="ayuda">Escriba sus apellidos y nombres completos.</p>
-    ${window._estadoRoster==='error'?'<div class="alerta">⚠️ No se pudo conectar a la base. No se puede cargar ni registrar emprendimientos hasta que haya conexión.</div>':''}
+    ${window._estadoRoster==='error'?'<div class="alerta">⚠️ La base no respondió a tiempo. A veces tarda en despertar.<br><button class="btn btn-p" style="width:100%;margin-top:9px" onclick="elegirFase(fase)">🔄 Reintentar</button></div>':''}
     ${window._estadoRoster==='demo'?'<div class="alerta">⚠️ Modo prueba sin base de datos: no hay padrón cargado. Configure la dirección de la base desde ⚙️ antes de aplicar una ficha.</div>':''}
     <div class="campo"><label>Apellidos</label>
       <input type="text" data-k="ap" value="${esc(sel.apellidos||'')}" placeholder="Ej.: Rojas Terceros" oninput="sel.apellidos=this.value;valAplica()"></div>
@@ -1109,7 +1140,7 @@ async function guardarNuevo(forzar){
     '&rubro='+encodeURIComponent(NUEVO.rubro||'')+
     (forzar?'&forzar=1':'');
   let j=null;
-  try{ j=await jsonp(q,25); }catch(e){
+  try{ j=await jsonp(q,35); }catch(e){
     m.innerHTML='<div class="err-envio">📶 Sin conexión. No se pudo registrar. Inténtelo cuando tenga señal.</div>';
     valNuevo(); return;
   }
@@ -1559,7 +1590,7 @@ async function probarConexion(){
   m.innerHTML='<div class="alerta">Probando conexión…</div>';
   const anterior=API_URL; API_URL=url;
   try{
-    const j=await jsonp('action=ping',15);
+    const j=await jsonpR('action=ping',30);
     if(j&&j.status==='ok'){
       localStorage.setItem(LSKEY_URL,url);
       m.innerHTML='<div class="ok-envio">✅ Conexión exitosa. La app puede leer y escribir en la base.</div>';
